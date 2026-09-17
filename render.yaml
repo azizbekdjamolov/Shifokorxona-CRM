@@ -1,0 +1,50 @@
+databases:
+  - name: shifokorxona-db
+    databaseName: shifokorxona_crm
+    user: shifokorxona
+    plan: free
+    region: singapore
+
+services:
+  - type: web
+    name: shifokorxona-backend
+    runtime: python
+    plan: free
+    region: singapore
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 60"
+    preDeployCommand: "python manage.py migrate --noinput && python manage.py collectstatic --noinput"
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: ".onrender.com,shifokorxona-backend.onrender.com"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://shifokorxona-frontend.onrender.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://shifokorxona-frontend.onrender.com,https://shifokorxona-backend.onrender.com"
+      - key: FRONTEND_URL
+        value: "https://shifokorxona-frontend.onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: shifokorxona-db
+          property: connectionString
+
+  - type: web
+    name: shifokorxona-frontend
+    runtime: static
+    plan: free
+    region: singapore
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: "/*"
+        destination: "/index.html"
+    envVars:
+      - key: VITE_API_URL
+        value: "https://shifokorxona-backend.onrender.com/api"
