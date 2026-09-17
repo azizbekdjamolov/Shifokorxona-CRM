@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "./context/AuthContext";
 import ThemeToggle from "./components/ThemeToggle";
 import LanguageSwitcher from "./components/LanguageSwitcher";
-import LoginModal from "./pages/auth/LoginModal";
 import PublicRoutes from "./routes/PublicRoutes";
 import UserRoutes from "./routes/UserRoutes";
 import DoctorRoutes from "./routes/DoctorRoutes";
@@ -13,7 +11,6 @@ import AdminRoutes from "./routes/AdminRoutes";
 export default function App() {
   const { user, logout } = useAuth();
   const { t } = useTranslation();
-  const [showLogin, setShowLogin] = useState(false);
 
   const navLinkClass = ({ isActive }) =>
     isActive ? "nav-link nav-link-active" : "nav-link";
@@ -91,9 +88,9 @@ export default function App() {
               </button>
             </div>
           ) : (
-            <button className="btn btn-primary btn-sm btn-login" onClick={() => setShowLogin(true)}>
+            <Link to="/login" className="btn btn-primary btn-sm btn-login">
               {t("auth.login")}
-            </button>
+            </Link>
           )}
         </div>
       </header>
@@ -104,12 +101,6 @@ export default function App() {
         <AdminRoutes />
       </main>
       <footer className="app-footer">Shifokorxona CRM © 2026</footer>
-      {showLogin && (
-        <LoginModal
-          onClose={() => setShowLogin(false)}
-          onSuccess={() => setShowLogin(false)}
-        />
-      )}
     </div>
   );
 }

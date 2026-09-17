@@ -1,9 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { createBooking } from "../../api/bookingsApi";
-import LoginModal from "../../pages/auth/LoginModal";
-import OtpVerify from "../../pages/auth/OtpVerify";
 
 const nextDays = () => {
   const days = [];
@@ -19,8 +18,6 @@ const nextDays = () => {
 export default function BookingModal({ doctor, onClose }) {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const [step, setStep] = useState(user ? "form" : "login");
-  const [pendingEmail, setPendingEmail] = useState("");
   const [date, setDate] = useState(nextDays()[0]);
   const [time, setTime] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,11 +29,6 @@ export default function BookingModal({ doctor, onClose }) {
     const weekDay = new Date(date).getDay();
     return s.weekday === weekDay;
   });
-
-  const handleAuthSuccess = () => {
-    setSuccess(false);
-    setStep("form");
-  };
 
   const submit = async () => {
     setLoading(true);
@@ -61,26 +53,19 @@ export default function BookingModal({ doctor, onClose }) {
           Dr. {doctor.user?.full_name} {t("booking.title")}
         </h2>
 
-        {step === "login" && (
-          <LoginModal onSuccess={handleAuthSuccess} initialMode="login" embedded onRegister={() => setStep("register")} />
+        {!user && (
+          <div className="booking-login-prompt">
+            <p>{t("booking.needLogin")}</p>
+            <Link to="/login" className="btn btn-primary">
+              {t("auth.login")}
+            </Link>
+            <Link to="/register" className="link-btn">
+              {t("auth.register")}
+            </Link>
+          </div>
         )}
 
-        {step === "register" && (
-          <LoginModal
-            onSuccess={handleAuthSuccess}
-            initialMode="register"
-            embedded
-            onOtpRequired={(email) => {
-              setPendingEmail(email);
-              setStep("otp");
-            }}
-            onLogin={() => setStep("login")}
-          />
-        )}
-
-        {step === "otp" && <OtpVerify email={pendingEmail} onSuccess={handleAuthSuccess} />}
-
-        {step === "form" && (
+        {user && (
           <div className="booking-form">
             {success ? (
               <div className="success-message">

@@ -45,7 +45,7 @@
     "search": "Search doctor...",
     "allSpecialties": "All specialties"
   },
-  "auth": {
+"auth": {
     "loginTitle": "Login",
     "registerTitle": "Register",
     "verifyTitle": "Verify email",
@@ -57,17 +57,27 @@
     "password": "Password",
     "confirmPassword": "Confirm password",
     "code": "Verification code",
-    "loginBtn": "Login",
+    "loginBtn": "Sign in",
     "registerBtn": "Register",
     "verifyBtn": "Verify",
     "resend": "Resend",
     "codeDidntArrive": "Didn't get the code?",
     "noAccount": "No account?",
-    "hasAccount": "Have an account?",
+    "hasAccount": "Already have an account?",
     "register": "Register",
-    "login": "Login",
+    "login": "Sign in",
     "wrongCredentials": "Invalid email or password",
-    "wrongCode": "Invalid or expired code"
+    "wrongCode": "Invalid or expired code",
+    "welcomeBack": "Welcome back!",
+    "loginSubtitle": "Log in to continue",
+    "backHome": "Back to home",
+    "registerSubtitle": "Registration takes a couple of minutes",
+    "tagline": "A handy CRM for your health",
+    "taglineSub": "Doctor appointments, queue, and prescriptions — all in one place.",
+    "featBooking": "Online doctor appointment",
+    "featQueue": "Live queue status",
+    "featPrescriptions": "Digital prescriptions stored",
+    "featReviews": "Leave reviews for doctors"
   },
   "booking": {
     "title": "booking with",
@@ -75,6 +85,7 @@
     "time": "Time",
     "selectTime": "Select time",
     "confirm": "Confirm booking",
+    "needLogin": "Log in to book an appointment",
     "success": "Booking accepted!",
     "close": "Close",
     "error": "Booking error"

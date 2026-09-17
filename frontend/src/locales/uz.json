@@ -67,7 +67,17 @@
     "register": "Ro'yxatdan o'tish",
     "login": "Kirish",
     "wrongCredentials": "Email yoki parol noto'g'ri",
-    "wrongCode": "Kod noto'g'ri yoki muddati o'tgan"
+    "wrongCode": "Kod noto'g'ri yoki muddati o'tgan",
+    "welcomeBack": "Xush kelibsiz!",
+    "loginSubtitle": "Davom etish uchun hisobingizga kiring",
+    "backHome": "Bosh sahifaga qaytish",
+    "registerSubtitle": "Birinchi marta sizga biroz vaqt ketadi",
+    "tagline": "Sog'liqni saqlash uchun qulay CRM",
+    "taglineSub": "Shifokorlarga yozilish, navbat va retseptlar — hammasi bir joyda.",
+    "featBooking": "Onlayn shifokor qabuliga yozilish",
+    "featQueue": "Jonli navbat holati",
+    "featPrescriptions": "E-retseptlar saqlanadi",
+    "featReviews": "Shifokorlarga sharh qoldirish"
   },
   "booking": {
     "title": "ga yozilish",
@@ -75,6 +85,7 @@
     "time": "Vaqt",
     "selectTime": "Vaqtni tanlang",
     "confirm": "Bronni tasdiqlash",
+    "needLogin": "Bron qilish uchun tizimga kiring",
     "success": "Broningiz qabul qilindi!",
     "close": "Yopish",
     "error": "Bron qilishda xatolik"

@@ -45,7 +45,7 @@
     "search": "Поиск врача...",
     "allSpecialties": "Все направления"
   },
-  "auth": {
+"auth": {
     "loginTitle": "Вход",
     "registerTitle": "Регистрация",
     "verifyTitle": "Подтверждение email",
@@ -63,11 +63,21 @@
     "resend": "Отправить снова",
     "codeDidntArrive": "Код не пришёл?",
     "noAccount": "Нет аккаунта?",
-    "hasAccount": "Есть аккаунт?",
-    "register": "Зарегистрироваться",
+    "hasAccount": "Уже есть аккаунт?",
+    "register": "Регистрация",
     "login": "Войти",
     "wrongCredentials": "Неверный email или пароль",
-    "wrongCode": "Неверный или просроченный код"
+    "wrongCode": "Неверный код или он истёк",
+    "welcomeBack": "С возвращением!",
+    "loginSubtitle": "Войдите, чтобы продолжить",
+    "backHome": "Вернуться на главную",
+    "registerSubtitle": "Регистрация займёт пару минут",
+    "tagline": "Удобная CRM для здоровья",
+    "taglineSub": "Запись к врачам, очередь и рецепты — всё в одном месте.",
+    "featBooking": "Онлайн-запись к врачу",
+    "featQueue": "Живая очередь",
+    "featPrescriptions": "Хранение электронных рецептов",
+    "featReviews": "Отзывы о врачах"
   },
   "booking": {
     "title": "запись к",
@@ -75,6 +85,7 @@
     "time": "Время",
     "selectTime": "Выберите время",
     "confirm": "Подтвердить бронь",
+    "needLogin": "Войдите, чтобы записаться",
     "success": "Бронь принята!",
     "close": "Закрыть",
     "error": "Ошибка при бронировании"
