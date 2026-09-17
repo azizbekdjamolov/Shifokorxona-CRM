@@ -1,0 +1,41 @@
+[data-theme="dark"] {
+  --bg: #111827;
+  --surface: #1f2937;
+  --surface-hover: #374151;
+  --text: #f3f4f6;
+  --text-muted: #9ca3af;
+  --border: #374151;
+  --primary: #14b8a6;
+  --primary-hover: #0d9488;
+  --primary-text: #ffffff;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --status-hold: #f59e0b;
+  --status-confirmed: #3b82f6;
+  --status-completed: #22c55e;
+  --status-cancelled: #ef4444;
+}
+
+[data-theme="dark"] .modal-backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .hero {
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+}
+
+[data-theme="dark"] .star {
+  color: #374151;
+}
+
+[data-theme="dark"] .auth-form input,
+[data-theme="dark"] .auth-form select,
+[data-theme="dark"] .auth-form textarea,
+[data-theme="dark"] .filter-bar input,
+[data-theme="dark"] .filter-bar select {
+  background: #111827;
+  border-color: #374151;
+  color: var(--text);
+}
