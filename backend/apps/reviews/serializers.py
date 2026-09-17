@@ -29,6 +29,8 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         booking = attrs["booking"]
+        if Review.objects.filter(booking=booking).exists():
+            raise serializers.ValidationError({"booking": "Bu bron uchun sharh allaqachon qoldirilgan"})
         if booking.user_id != self.context["request"].user.id:
             raise serializers.ValidationError({"booking": "Bu bron sizga tegishli emas"})
         if booking.status != "completed":
