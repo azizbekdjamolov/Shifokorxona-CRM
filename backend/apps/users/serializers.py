@@ -1,0 +1,85 @@
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+
+from apps.users.services.otp_service import generate_otp, send_otp_email
+
+User = get_user_model()
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=8)
+    confirm_password = serializers.CharField(write_only=True, min_length=8)
+
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "phone", "email", "password", "confirm_password"]
+        extra_kwargs = {"email": {"required": True}}
+
+    def validate_email(self, value):
+        if User.objects.filter(email__iexact=value.lower()).exists():
+            raise serializers.ValidationError("Bu email allaqachon ro'yxatdan o'tgan")
+        return value.lower()
+
+    def validate(self, attrs):
+        if attrs["password"] != attrs["confirm_password"]:
+            raise serializers.ValidationError({"confirm_password": "Parollar bir xil emas"})
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop("confirm_password")
+        user = User.objects.create_user(
+            username=validated_data["email"],
+            first_name=validated_data.get("first_name", ""),
+            last_name=validated_data.get("last_name", ""),
+            phone=validated_data.get("phone", ""),
+            email=validated_data["email"],
+            password=validated_data["password"],
+        )
+        otp = generate_otp(user, "email_verify")
+        send_otp_email(otp)
+        return user
+
+
+class VerifyOtpSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.CharField(max_length=6)
+
+    def validate(self, attrs):
+        from apps.users.services.otp_service import verify_otp
+
+        user = User.objects.filter(email__iexact=attrs["email"]).first()
+        if not user:
+            raise serializers.ValidationError({"email": "Foydalanuvchi topilmadi"})
+        if not verify_otp(user, attrs["code"]):
+            raise serializers.ValidationError({"code": "Noto'g'ri yoki muddati o'tgan kod"})
+        user.is_email_verified = True
+        user.save(update_fields=["is_email_verified"])
+        attrs["user"] = user
+        return attrs
+
+
+class UserSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "full_name",
+            "email",
+            "phone",
+            "role",
+            "is_email_verified",
+            "telegram_chat_id",
+        ]
+
+    def get_full_name(self, obj):
+        return obj.get_full_name() or obj.email
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "phone"]
