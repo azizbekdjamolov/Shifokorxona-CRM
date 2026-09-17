@@ -15,7 +15,7 @@ Bron 5 daqiqalik vaqtinchalik bandlik (hold) bilan ishlaydi, login faqat bron bo
 ```
 shifokorxona-crm/
 ├── backend/                        # Django + DRF
-│   ├── config/                     # asosiy sozlamalar (settings, urls, celery)
+│   ├── config/                     # asosiy sozlamalar (settings, urls)
 │   └── apps/
 │       ├── users/                  # auth, rollar, OTP
 │       ├── doctors/                # shifokor, mutaxassislik, ish jadvali

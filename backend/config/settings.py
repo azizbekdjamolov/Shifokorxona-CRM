@@ -127,25 +127,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/1")
-CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/2")
-CELERY_TIMEZONE = "Asia/Tashkent"
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
-CELERY_BEAT_SCHEDULE = {
-    "expire-held-bookings-every-minute": {
-        "task": "apps.bookings.tasks.expire_hold_bookings",
-        "schedule": 60.0,
-    },
-    "send-medication-reminders-every-minute": {
-        "task": "apps.notifications.tasks.send_due_medication_reminders",
-        "schedule": 60.0,
-    },
-}
-
 CACHE = {
     "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": os.getenv("REDIS_URL", "redis://localhost:6379/0"),
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "shifokorxona-cache",
     }
 }
 

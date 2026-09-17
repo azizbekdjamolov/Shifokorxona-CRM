@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from celery import shared_task
 from django.utils import timezone
 
 from apps.notifications.bot import send_telegram_message
@@ -38,7 +37,6 @@ def _save_notification(user, message, type_, chat_id, is_sent):
     )
 
 
-@shared_task
 def send_due_medication_reminders():
     now = timezone.now()
     today = now.date()
