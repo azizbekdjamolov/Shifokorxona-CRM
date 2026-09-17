@@ -52,7 +52,7 @@ class DoctorUpdateView(generics.UpdateAPIView):
         return DoctorCreateSerializer
 
 
-class DoctorManageView(generics.RetrieveUpdateView):
+class DoctorManageView(generics.RetrieveUpdateAPIView):
     serializer_class = DoctorSerializer
     permission_classes = [IsAuthenticated, IsDoctorUser]
 
