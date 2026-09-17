@@ -136,6 +136,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
+    "TOKEN_OBTAIN_SERIALIZER": "apps.users.services.jwt_serializer.EmailTokenObtainPairSerializer",
 }
 
 CORS_ALLOWED_ORIGINS = [o.strip() for o in os.getenv(
