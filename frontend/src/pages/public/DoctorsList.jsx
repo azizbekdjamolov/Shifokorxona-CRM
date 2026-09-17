@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getDoctors, getSpecialties } from "../../api/doctorsApi";
 import DoctorCard from "../../components/common/DoctorCard";
 
 export default function DoctorsList() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const [doctors, setDoctors] = useState([]);
   const [specialties, setSpecialties] = useState([]);
@@ -28,10 +30,10 @@ export default function DoctorsList() {
           type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Shifokor nomini qidirish..."
+          placeholder={t("doctor.search")}
         />
         <select value={specialty} onChange={(e) => setSpecialty(e.target.value)}>
-          <option value="">Barcha yo'nalishlar</option>
+          <option value="">{t("doctor.allSpecialties")}</option>
           {specialties.map((s) => (
             <option key={s.id} value={s.id}>
               {s.name}
@@ -44,7 +46,7 @@ export default function DoctorsList() {
           <DoctorCard key={d.id} doctor={d} />
         ))}
       </div>
-      {doctors.length === 0 && <p className="empty-state">Shifokorlar topilmadi</p>}
+      {doctors.length === 0 && <p className="empty-state">{t("common.empty")}</p>}
     </div>
   );
 }

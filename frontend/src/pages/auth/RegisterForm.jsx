@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 
 export default function RegisterForm({ onOtpRequired, onBack }) {
+  const { t } = useTranslation();
   const { registerUser } = useAuth();
   const [form, setForm] = useState({
     first_name: "",
@@ -25,57 +27,34 @@ export default function RegisterForm({ onOtpRequired, onBack }) {
       if (onOtpRequired) onOtpRequired(form.email);
     } catch (err) {
       const data = err.response?.data;
-      const firstError = data
-        ? Object.values(data).flat()[0]
-        : "Ro'yxatdan o'tishda xatolik";
-      setError(firstError || "Ro'yxatdan o'tishda xatolik");
+      const firstError = data ? Object.values(data).flat()[0] : null;
+      setError(firstError || t("auth.wrongCredentials"));
     } finally {
       setLoading(false);
     }
   };
 
-  const content = (
+  return (
     <form className="auth-form" onSubmit={submit}>
-      <h2>Ro'yxatdan o'tish</h2>
+      <h2>{t("auth.registerTitle")}</h2>
       <label>
-        Ism
-        <input
-          name="first_name"
-          value={form.first_name}
-          onChange={handleChange}
-          required
-        />
+        {t("auth.firstName")}
+        <input name="first_name" value={form.first_name} onChange={handleChange} required />
       </label>
       <label>
-        Familiya
-        <input
-          name="last_name"
-          value={form.last_name}
-          onChange={handleChange}
-          required
-        />
+        {t("auth.lastName")}
+        <input name="last_name" value={form.last_name} onChange={handleChange} required />
       </label>
       <label>
-        Telefon
-        <input
-          name="phone"
-          value={form.phone}
-          onChange={handleChange}
-          placeholder="+998..."
-        />
+        {t("auth.phone")}
+        <input name="phone" value={form.phone} onChange={handleChange} placeholder="+998..." />
       </label>
       <label>
-        Email
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
+        {t("auth.email")}
+        <input type="email" name="email" value={form.email} onChange={handleChange} required />
       </label>
       <label>
-        Parol
+        {t("auth.password")}
         <input
           type="password"
           name="password"
@@ -86,7 +65,7 @@ export default function RegisterForm({ onOtpRequired, onBack }) {
         />
       </label>
       <label>
-        Parolni takrorlang
+        {t("auth.confirmPassword")}
         <input
           type="password"
           name="confirm_password"
@@ -98,16 +77,14 @@ export default function RegisterForm({ onOtpRequired, onBack }) {
       </label>
       {error && <p className="error-text">{error}</p>}
       <button className="btn btn-primary" disabled={loading}>
-        {loading ? "Yuklanmoqda..." : "Ro'yxatdan o'tish"}
+        {loading ? t("common.loading") : t("auth.registerBtn")}
       </button>
       <p className="auth-switch">
-        Hisobingiz bormi?{" "}
+        {t("auth.hasAccount")}{" "}
         <button type="button" className="link-btn" onClick={onBack}>
-          Kirish
+          {t("auth.login")}
         </button>
       </p>
     </form>
   );
-
-  return content;
 }

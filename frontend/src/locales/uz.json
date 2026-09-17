@@ -1,0 +1,108 @@
+{
+  "nav": {
+    "home": "Bosh sahifa",
+    "doctors": "Shifokorlar",
+    "dashboard": "Mening panel",
+    "myQueue": "Navbatim",
+    "myPrescriptions": "Retseptlarim",
+    "doctorPanel": "Shifokor paneli",
+    "todayQueue": "Bugungi navbat",
+    "schedule": "Jadval",
+    "adminPanel": "Admin panel",
+    "users": "Userlar",
+    "bookings": "Bronlar",
+    "logout": "Chiqish",
+    "loggedOut": "Kirilmagan"
+  },
+  "common": {
+    "loading": "Yuklanmoqda...",
+    "close": "Yopish",
+    "save": "Saqlash",
+    "add": "Qo'shish",
+    "edit": "Tahrirlash",
+    "delete": "O'chirish",
+    "cancel": "Bekor qilish",
+    "confirm": "Tasdiqlash",
+    "confirmQuestion": "Bronni bekor qilasizmi?",
+    "deleteQuestion": "Yozuvni o'chirasizmi?",
+    "send": "Yuborish",
+    "update": "Yangilash",
+    "empty": "Ma'lumot topilmadi"
+  },
+  "home": {
+    "heroTitle": "Shifokorxona CRM ga xush kelibsiz",
+    "heroText": "Shifokorlarga onlayn yoziling, navbatingizni kuzating, retseptlaringizni ko'ring.",
+    "ctaDoctors": "Shifokorlarni ko'rish",
+    "specialties": "Yo'nalishlar",
+    "popularDoctors": "Mashhur shifokorlar"
+  },
+  "doctor": {
+    "book": "Band qilish",
+    "experience": "Tajriba",
+    "years": "yil",
+    "price": "Narx",
+    "rating": "Baho",
+    "search": "Shifokor nomini qidirish...",
+    "allSpecialties": "Barcha yo'nalishlar"
+  },
+  "auth": {
+    "loginTitle": "Kirish",
+    "registerTitle": "Ro'yxatdan o'tish",
+    "verifyTitle": "Emailni tasdiqlash",
+    "verifyText": "manziliga yuborilgan 6 xonali kodni kiriting.",
+    "firstName": "Ism",
+    "lastName": "Familiya",
+    "phone": "Telefon",
+    "email": "Email",
+    "password": "Parol",
+    "confirmPassword": "Parolni takrorlang",
+    "code": "Tasdiqlash kodi",
+    "loginBtn": "Kirish",
+    "registerBtn": "Ro'yxatdan o'tish",
+    "verifyBtn": "Tasdiqlash",
+    "resend": "Qayta yuborish",
+    "codeDidntArrive": "Kod kelmadimi?",
+    "noAccount": "Hisobingiz yo'qmi?",
+    "hasAccount": "Hisobingiz bormi?",
+    "register": "Ro'yxatdan o'tish",
+    "login": "Kirish",
+    "wrongCredentials": "Email yoki parol noto'g'ri",
+    "wrongCode": "Kod noto'g'ri yoki muddati o'tgan"
+  },
+  "booking": {
+    "title": "ga yozilish",
+    "date": "Sana",
+    "time": "Vaqt",
+    "selectTime": "Vaqtni tanlang",
+    "confirm": "Bronni tasdiqlash",
+    "success": "Broningiz qabul qilindi!",
+    "close": "Yopish",
+    "error": "Bron qilishda xatolik"
+  },
+  "queue": {
+    "title": "Mening navbatim",
+    "hold": "Vaqtinchalik band",
+    "confirmed": "Tasdiqlangan",
+    "completed": "Yakunlangan",
+    "cancelled": "Bekor qilingan",
+    "cancel": "Bekor qilish",
+    "leaveReview": "Sharh qoldirish",
+    "holdWarning": "gacha tasdiqlanishi kerak"
+  },
+  "prescriptions": {
+    "title": "Mening retseptlarim",
+    "perDay": "Kuniga",
+    "times": "marta",
+    "forDays": "kun",
+    "medicine": "dori",
+    "instruction": "Izoh",
+    "doctor": "Shifokor"
+  },
+  "review": {
+    "title": "Sharh qoldirish",
+    "rating": "Baho",
+    "text": "Sharh matni",
+    "placeholder": "Shifokor haqida fikringiz...",
+    "submit": "Yuborish"
+  }
+}

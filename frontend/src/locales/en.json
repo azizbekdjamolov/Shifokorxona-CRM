@@ -1,0 +1,108 @@
+{
+  "nav": {
+    "home": "Home",
+    "doctors": "Doctors",
+    "dashboard": "My Dashboard",
+    "myQueue": "My Queue",
+    "myPrescriptions": "My Prescriptions",
+    "doctorPanel": "Doctor Panel",
+    "todayQueue": "Today Queue",
+    "schedule": "Schedule",
+    "adminPanel": "Admin Panel",
+    "users": "Users",
+    "bookings": "Bookings",
+    "logout": "Logout",
+    "loggedOut": "Not signed in"
+  },
+  "common": {
+    "loading": "Loading...",
+    "close": "Close",
+    "save": "Save",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "confirmQuestion": "Cancel this booking?",
+    "deleteQuestion": "Delete this entry?",
+    "send": "Send",
+    "update": "Update",
+    "empty": "No data found"
+  },
+  "home": {
+    "heroTitle": "Welcome to Shifokorxona CRM",
+    "heroText": "Book doctors online, track your queue and prescriptions.",
+    "ctaDoctors": "View doctors",
+    "specialties": "Specialties",
+    "popularDoctors": "Popular doctors"
+  },
+  "doctor": {
+    "book": "Book",
+    "experience": "Experience",
+    "years": "yrs",
+    "price": "Price",
+    "rating": "Rating",
+    "search": "Search doctor...",
+    "allSpecialties": "All specialties"
+  },
+  "auth": {
+    "loginTitle": "Login",
+    "registerTitle": "Register",
+    "verifyTitle": "Verify email",
+    "verifyText": "Enter the 6-digit code sent to",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "code": "Verification code",
+    "loginBtn": "Login",
+    "registerBtn": "Register",
+    "verifyBtn": "Verify",
+    "resend": "Resend",
+    "codeDidntArrive": "Didn't get the code?",
+    "noAccount": "No account?",
+    "hasAccount": "Have an account?",
+    "register": "Register",
+    "login": "Login",
+    "wrongCredentials": "Invalid email or password",
+    "wrongCode": "Invalid or expired code"
+  },
+  "booking": {
+    "title": "booking with",
+    "date": "Date",
+    "time": "Time",
+    "selectTime": "Select time",
+    "confirm": "Confirm booking",
+    "success": "Booking accepted!",
+    "close": "Close",
+    "error": "Booking error"
+  },
+  "queue": {
+    "title": "My queue",
+    "hold": "On hold",
+    "confirmed": "Confirmed",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "cancel": "Cancel",
+    "leaveReview": "Leave a review",
+    "holdWarning": "must be confirmed before"
+  },
+  "prescriptions": {
+    "title": "My prescriptions",
+    "perDay": "Per day",
+    "times": "times",
+    "forDays": "days",
+    "medicine": "medicine",
+    "instruction": "Instruction",
+    "doctor": "Doctor"
+  },
+  "review": {
+    "title": "Leave a review",
+    "rating": "Rating",
+    "text": "Review text",
+    "placeholder": "Your opinion about the doctor...",
+    "submit": "Submit"
+  }
+}

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getSpecialties, getDoctors } from "../../api/doctorsApi";
 import DoctorCard from "../../components/common/DoctorCard";
 
 export default function Home() {
+  const { t } = useTranslation();
   const [specialties, setSpecialties] = useState([]);
   const [doctors, setDoctors] = useState([]);
 
@@ -15,15 +17,15 @@ export default function Home() {
   return (
     <div className="home-page">
       <section className="hero">
-        <h1>Shifokorxona CRM ga xush kelibsiz</h1>
-        <p>Shifokorlarga onlayn yoziling, navbatingizni kuzating, retseptlaringizni ko'ring.</p>
+        <h1>{t("home.heroTitle")}</h1>
+        <p>{t("home.heroText")}</p>
         <Link to="/doctors" className="btn btn-primary">
-          Shifokorlarni ko'rish
+          {t("home.ctaDoctors")}
         </Link>
       </section>
 
       <section className="section">
-        <h2>Yo'nalishlar</h2>
+        <h2>{t("home.specialties")}</h2>
         <div className="specialty-grid">
           {specialties.map((s) => (
             <Link key={s.id} to={`/specialties/${s.slug}`} className="specialty-card">
@@ -35,7 +37,7 @@ export default function Home() {
       </section>
 
       <section className="section">
-        <h2>Mashhur shifokorlar</h2>
+        <h2>{t("home.popularDoctors")}</h2>
         <div className="doctors-grid">
           {doctors.map((d) => (
             <DoctorCard key={d.id} doctor={d} />

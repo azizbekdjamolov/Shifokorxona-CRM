@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { getMyPrescriptions } from "../../api/prescriptionsApi";
 
 export default function MyPrescriptions() {
+  const { t } = useTranslation();
   const [prescriptions, setPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,10 +15,10 @@ export default function MyPrescriptions() {
 
   return (
     <div className="list-page">
-      <h1>Mening retseptlarim</h1>
-      {loading && <p>Yuklanmoqda...</p>}
+      <h1>{t("prescriptions.title")}</h1>
+      {loading && <p>{t("common.loading")}</p>}
       {!loading && prescriptions.length === 0 && (
-        <p className="empty-state">Sizda retseptlar yo'q.</p>
+        <p className="empty-state">{t("common.empty")}</p>
       )}
       <div className="card-list">
         {prescriptions.map((p) => (
@@ -27,9 +29,12 @@ export default function MyPrescriptions() {
             </div>
             <p>{p.instruction}</p>
             <p>
-              Kuniga {p.times_per_day} marta • {p.days} kun
+              {t("prescriptions.perDay")} {p.times_per_day} {t("prescriptions.times")} • {p.days}{" "}
+              {t("prescriptions.forDays")}
             </p>
-            <p>Shifokor: {p.doctor_name}</p>
+            <p>
+              {t("prescriptions.doctor")}: {p.doctor_name}
+            </p>
             {p.image && (
               <img src={p.image} alt={p.medicine_name} className="medicine-image" />
             )}

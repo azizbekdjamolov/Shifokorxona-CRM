@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import RegisterForm from "./RegisterForm";
 import OtpVerify from "./OtpVerify";
@@ -12,6 +13,7 @@ export default function LoginModal({
   onOtpRequired,
   onLogin,
 }) {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const [mode, setMode] = useState(initialMode);
   const [email, setEmail] = useState("");
@@ -35,7 +37,7 @@ export default function LoginModal({
       await login(email, password);
       if (onSuccess) onSuccess();
     } catch {
-      setError("Email yoki parol noto'g'ri");
+      setError(t("auth.wrongCredentials"));
     } finally {
       setLoading(false);
     }
@@ -44,7 +46,6 @@ export default function LoginModal({
   if (mode === "register") {
     return (
       <RegisterForm
-        embedded
         onOtpRequired={(em) => {
           setPendingOtpEmail(em);
           if (onOtpRequired) onOtpRequired(em);
@@ -68,9 +69,9 @@ export default function LoginModal({
 
   const content = (
     <form className="auth-form" onSubmit={handleLogin}>
-      <h2>Kirish</h2>
+      <h2>{t("auth.loginTitle")}</h2>
       <label>
-        Email
+        {t("auth.email")}
         <input
           type="email"
           value={email}
@@ -79,7 +80,7 @@ export default function LoginModal({
         />
       </label>
       <label>
-        Parol
+        {t("auth.password")}
         <input
           type="password"
           value={password}
@@ -89,12 +90,12 @@ export default function LoginModal({
       </label>
       {error && <p className="error-text">{error}</p>}
       <button className="btn btn-primary" disabled={loading}>
-        {loading ? "Yuklanmoqda..." : "Kirish"}
+        {loading ? t("common.loading") : t("auth.loginBtn")}
       </button>
       <p className="auth-switch">
-        Hisobingiz yo'qmi?{" "}
+        {t("auth.noAccount")}{" "}
         <button type="button" className="link-btn" onClick={() => switchMode("register")}>
-          Ro'yxatdan o'tish
+          {t("auth.register")}
         </button>
       </p>
     </form>

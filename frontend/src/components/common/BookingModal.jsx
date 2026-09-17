@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { createBooking } from "../../api/bookingsApi";
 import LoginModal from "../../pages/auth/LoginModal";
@@ -16,6 +17,7 @@ const nextDays = () => {
 };
 
 export default function BookingModal({ doctor, onClose }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [step, setStep] = useState(user ? "form" : "login");
   const [pendingEmail, setPendingEmail] = useState("");
@@ -43,7 +45,7 @@ export default function BookingModal({ doctor, onClose }) {
       await createBooking({ doctor: doctor.id, date, time });
       setSuccess(true);
     } catch (err) {
-      setError(err.response?.data?.time?.[0] || err.response?.data?.detail || "Bron qilishda xatolik");
+      setError(err.response?.data?.time?.[0] || err.response?.data?.detail || t("booking.error"));
     } finally {
       setLoading(false);
     }
@@ -55,49 +57,42 @@ export default function BookingModal({ doctor, onClose }) {
         <button className="modal-close" onClick={onClose}>
           ✕
         </button>
-        <h2>Dr. {doctor.user?.full_name} ga yozilish</h2>
+        <h2>
+          Dr. {doctor.user?.full_name} {t("booking.title")}
+        </h2>
 
         {step === "login" && (
-          <LoginModal
-            onSuccess={handleAuthSuccess}
-            initialMode="login"
-            embedded
-            onRegister={() => setStep("register")}
-          />
+          <LoginModal onSuccess={handleAuthSuccess} initialMode="login" embedded onRegister={() => setStep("register")} />
         )}
 
         {step === "register" && (
-          <div>
-            <LoginModal
-              onSuccess={handleAuthSuccess}
-              initialMode="register"
-              embedded
-              onOtpRequired={(email) => {
-                setPendingEmail(email);
-                setStep("otp");
-              }}
-              onLogin={() => setStep("login")}
-            />
-          </div>
+          <LoginModal
+            onSuccess={handleAuthSuccess}
+            initialMode="register"
+            embedded
+            onOtpRequired={(email) => {
+              setPendingEmail(email);
+              setStep("otp");
+            }}
+            onLogin={() => setStep("login")}
+          />
         )}
 
-        {step === "otp" && (
-          <OtpVerify email={pendingEmail} onSuccess={handleAuthSuccess} />
-        )}
+        {step === "otp" && <OtpVerify email={pendingEmail} onSuccess={handleAuthSuccess} />}
 
         {step === "form" && (
           <div className="booking-form">
             {success ? (
               <div className="success-message">
-                <p>✅ Broningiz qabul qilindi!</p>
+                <p>✅ {t("booking.success")}</p>
                 <button className="btn" onClick={onClose}>
-                  Yopish
+                  {t("booking.close")}
                 </button>
               </div>
             ) : (
               <>
                 <label>
-                  Sana
+                  {t("booking.date")}
                   <select value={date} onChange={(e) => setDate(e.target.value)}>
                     {nextDays().map((d) => (
                       <option key={d} value={d}>
@@ -107,9 +102,9 @@ export default function BookingModal({ doctor, onClose }) {
                   </select>
                 </label>
                 <label>
-                  Vaqt
+                  {t("booking.time")}
                   <select value={time} onChange={(e) => setTime(e.target.value)}>
-                    <option value="">Vaqtni tanlang</option>
+                    <option value="">{t("booking.selectTime")}</option>
                     {todaySlots.map((slot) => {
                       const start = slot.start_time.slice(0, 5);
                       return (
@@ -122,7 +117,7 @@ export default function BookingModal({ doctor, onClose }) {
                 </label>
                 {error && <p className="error-text">{error}</p>}
                 <button className="btn btn-primary" onClick={submit} disabled={!time || loading}>
-                  {loading ? "Yuklanmoqda..." : "Bronni tasdiqlash"}
+                  {loading ? t("common.loading") : t("booking.confirm")}
                 </button>
               </>
             )}

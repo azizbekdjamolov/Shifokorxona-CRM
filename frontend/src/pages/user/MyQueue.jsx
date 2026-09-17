@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getMyBookings, cancelMyBooking } from "../../api/bookingsApi";
 
 const statusText = {
@@ -10,6 +11,7 @@ const statusText = {
 };
 
 export default function MyQueue() {
+  const { t } = useTranslation();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,10 +32,10 @@ export default function MyQueue() {
 
   return (
     <div className="list-page">
-      <h1>Mening navbatim</h1>
-      {loading && <p>Yuklanmoqda...</p>}
+      <h1>{t("queue.title")}</h1>
+      {loading && <p>{t("common.loading")}</p>}
       {!loading && bookings.length === 0 && (
-        <p className="empty-state">Sizda bronlar yo'q.</p>
+        <p className="empty-state">{t("common.empty")}</p>
       )}
       <div className="card-list">
         {bookings.map((b) => (
@@ -49,16 +51,16 @@ export default function MyQueue() {
             </p>
             <p>{b.doctor.specialty_name}</p>
             {b.status === "hold" && b.hold_expires_at && (
-              <p className="hint">⚠️ Hold: {b.hold_expires_at} gacha tasdiqlanishi kerak</p>
+              <p className="hint">⚠️ {b.hold_expires_at} {t("queue.holdWarning")}</p>
             )}
             {b.status === "completed" && !b.review && (
               <Link to={`/leave-review/${b.id}`} className="btn">
-                Sharh qoldirish
+                {t("queue.leaveReview")}
               </Link>
             )}
             {(b.status === "hold" || b.status === "confirmed") && (
               <button className="btn btn-danger" onClick={() => handleCancel(b.id)}>
-                Bekor qilish
+                {t("queue.cancel")}
               </button>
             )}
           </div>

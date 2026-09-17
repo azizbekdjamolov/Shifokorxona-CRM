@@ -1,0 +1,108 @@
+{
+  "nav": {
+    "home": "Главная",
+    "doctors": "Врачи",
+    "dashboard": "Мой кабинет",
+    "myQueue": "Моя очередь",
+    "myPrescriptions": "Мои рецепты",
+    "doctorPanel": "Кабинет врача",
+    "todayQueue": "Сегодняшняя очередь",
+    "schedule": "Расписание",
+    "adminPanel": "Панель админа",
+    "users": "Пользователи",
+    "bookings": "Брони",
+    "logout": "Выйти",
+    "loggedOut": "Не вошли"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "close": "Закрыть",
+    "save": "Сохранить",
+    "add": "Добавить",
+    "edit": "Изменить",
+    "delete": "Удалить",
+    "cancel": "Отменить",
+    "confirm": "Подтвердить",
+    "confirmQuestion": "Отменить бронь?",
+    "deleteQuestion": "Удалить запись?",
+    "send": "Отправить",
+    "update": "Обновить",
+    "empty": "Данные не найдены"
+  },
+  "home": {
+    "heroTitle": "Добро пожаловать в Shifokorxona CRM",
+    "heroText": "Записывайтесь к врачам онлайн, следите за очередью и рецептами.",
+    "ctaDoctors": "Смотреть врачей",
+    "specialties": "Направления",
+    "popularDoctors": "Популярные врачи"
+  },
+  "doctor": {
+    "book": "Записаться",
+    "experience": "Опыт",
+    "years": "лет",
+    "price": "Цена",
+    "rating": "Рейтинг",
+    "search": "Поиск врача...",
+    "allSpecialties": "Все направления"
+  },
+  "auth": {
+    "loginTitle": "Вход",
+    "registerTitle": "Регистрация",
+    "verifyTitle": "Подтверждение email",
+    "verifyText": "Введите 6-значный код, отправленный на",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "phone": "Телефон",
+    "email": "Email",
+    "password": "Пароль",
+    "confirmPassword": "Повторите пароль",
+    "code": "Код подтверждения",
+    "loginBtn": "Войти",
+    "registerBtn": "Зарегистрироваться",
+    "verifyBtn": "Подтвердить",
+    "resend": "Отправить снова",
+    "codeDidntArrive": "Код не пришёл?",
+    "noAccount": "Нет аккаунта?",
+    "hasAccount": "Есть аккаунт?",
+    "register": "Зарегистрироваться",
+    "login": "Войти",
+    "wrongCredentials": "Неверный email или пароль",
+    "wrongCode": "Неверный или просроченный код"
+  },
+  "booking": {
+    "title": "запись к",
+    "date": "Дата",
+    "time": "Время",
+    "selectTime": "Выберите время",
+    "confirm": "Подтвердить бронь",
+    "success": "Бронь принята!",
+    "close": "Закрыть",
+    "error": "Ошибка при бронировании"
+  },
+  "queue": {
+    "title": "Моя очередь",
+    "hold": "Временная бронь",
+    "confirmed": "Подтверждено",
+    "completed": "Завершено",
+    "cancelled": "Отменено",
+    "cancel": "Отменить",
+    "leaveReview": "Оставить отзыв",
+    "holdWarning": "подтвердить до"
+  },
+  "prescriptions": {
+    "title": "Мои рецепты",
+    "perDay": "В день",
+    "times": "раз",
+    "forDays": "дней",
+    "medicine": "препарат",
+    "instruction": "Инструкция",
+    "doctor": "Врач"
+  },
+  "review": {
+    "title": "Оставить отзыв",
+    "rating": "Оценка",
+    "text": "Текст отзыва",
+    "placeholder": "Ваше мнение о враче...",
+    "submit": "Отправить"
+  }
+}

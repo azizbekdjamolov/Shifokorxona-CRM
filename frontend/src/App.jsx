@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "./context/AuthContext";
 import ThemeToggle from "./components/ThemeToggle";
 import LanguageSwitcher from "./components/LanguageSwitcher";
@@ -9,6 +10,7 @@ import AdminRoutes from "./routes/AdminRoutes";
 
 export default function App() {
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
 
   const navLinkClass = ({ isActive }) =>
     isActive ? "nav-link nav-link-active" : "nav-link";
@@ -21,50 +23,50 @@ export default function App() {
         </Link>
         <nav className="main-nav">
           <NavLink to="/" className={navLinkClass} end>
-            Bosh sahifa
+            {t("nav.home")}
           </NavLink>
           <NavLink to="/doctors" className={navLinkClass}>
-            Shifokorlar
+            {t("nav.doctors")}
           </NavLink>
           {user?.role === "patient" && (
             <>
               <NavLink to="/dashboard" className={navLinkClass}>
-                Mening panel
+                {t("nav.dashboard")}
               </NavLink>
               <NavLink to="/my-queue" className={navLinkClass}>
-                Navbatim
+                {t("nav.myQueue")}
               </NavLink>
               <NavLink to="/my-prescriptions" className={navLinkClass}>
-                Retseptlarim
+                {t("nav.myPrescriptions")}
               </NavLink>
             </>
           )}
           {user?.role === "doctor" && (
             <>
               <NavLink to="/doctor" className={navLinkClass}>
-                Shifokor paneli
+                {t("nav.doctorPanel")}
               </NavLink>
               <NavLink to="/doctor/today-queue" className={navLinkClass}>
-                Bugungi navbat
+                {t("nav.todayQueue")}
               </NavLink>
               <NavLink to="/doctor/schedule" className={navLinkClass}>
-                Jadval
+                {t("nav.schedule")}
               </NavLink>
             </>
           )}
           {user?.role === "admin" && (
             <>
               <NavLink to="/admin" className={navLinkClass}>
-                Admin panel
+                {t("nav.adminPanel")}
               </NavLink>
               <NavLink to="/admin/users" className={navLinkClass}>
-                Userlar
+                {t("nav.users")}
               </NavLink>
               <NavLink to="/admin/doctors" className={navLinkClass}>
-                Shifokorlar
+                {t("nav.doctors")}
               </NavLink>
               <NavLink to="/admin/bookings" className={navLinkClass}>
-                Bronlar
+                {t("nav.bookings")}
               </NavLink>
             </>
           )}
@@ -75,10 +77,10 @@ export default function App() {
           {user ? (
             <div className="user-menu">
               <span>{user.full_name || user.email}</span>
-              <button onClick={logout}>Chiqish</button>
+              <button onClick={logout}>{t("nav.logout")}</button>
             </div>
           ) : (
-            <span className="guest-label">Kirilmagan</span>
+            <span className="guest-label">{t("nav.loggedOut")}</span>
           )}
         </div>
       </header>

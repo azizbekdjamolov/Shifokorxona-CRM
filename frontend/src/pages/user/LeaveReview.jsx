@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createReview } from "../../api/reviewsApi";
 
 export default function LeaveReview() {
+  const { t } = useTranslation();
   const { bookingId } = useParams();
   const navigate = useNavigate();
   const [rating, setRating] = useState(5);
@@ -28,10 +30,10 @@ export default function LeaveReview() {
 
   return (
     <div className="form-page">
-      <h1>Sharh qoldirish</h1>
+      <h1>{t("review.title")}</h1>
       <form className="auth-form" onSubmit={submit}>
         <label>
-          Baho
+          {t("review.rating")}
           <div className="rating-picker">
             {ratings.map((r) => (
               <button
@@ -46,17 +48,17 @@ export default function LeaveReview() {
           </div>
         </label>
         <label>
-          Sharh matni
+          {t("review.text")}
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={4}
-            placeholder="Shifokor haqida fikringiz..."
+            placeholder={t("review.placeholder")}
           />
         </label>
         {error && <p className="error-text">{error}</p>}
         <button className="btn btn-primary" disabled={loading}>
-          {loading ? "Yuborilmoqda..." : "Yuborish"}
+          {loading ? t("common.loading") : t("review.submit")}
         </button>
       </form>
     </div>
