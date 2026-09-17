@@ -131,6 +131,12 @@ CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/1")
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/2")
 CELERY_TIMEZONE = "Asia/Tashkent"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_BEAT_SCHEDULE = {
+    "expire-held-bookings-every-minute": {
+        "task": "apps.bookings.tasks.expire_hold_bookings",
+        "schedule": 60.0,
+    },
+}
 
 CACHE = {
     "default": {

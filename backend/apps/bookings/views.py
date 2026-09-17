@@ -80,6 +80,9 @@ class PatientBookingCancelView(generics.UpdateAPIView):
                 {"detail": "Bu bronni bekor qilib bo'lmaydi"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        from apps.bookings.services.booking_lock import release_hold
+
+        release_hold(instance.doctor_id, instance.date, instance.time)
         instance.status = Booking.Status.CANCELLED
         instance.save()
         return Response({"detail": "Bron bekor qilindi"}, status=status.HTTP_200_OK)
