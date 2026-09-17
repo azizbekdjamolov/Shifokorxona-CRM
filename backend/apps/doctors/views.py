@@ -91,3 +91,48 @@ class DoctorScheduleDetailView(generics.RetrieveUpdateDestroyAPIView):
         if not doctor:
             return DoctorSchedule.objects.none()
         return DoctorSchedule.objects.filter(doctor=doctor)
+
+
+class AdminDoctorListView(generics.ListAPIView):
+    queryset = Doctor.objects.all().select_related("user", "specialty")
+    serializer_class = DoctorSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        specialty = self.request.query_params.get("specialty")
+        if specialty:
+            queryset = queryset.filter(specialty_id=specialty)
+        return queryset
+
+
+class AdminDoctorToggleView(generics.RetrieveUpdateAPIView):
+    queryset = Doctor.objects.all()
+    serializer_class = DoctorSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        is_active = request.data.get("is_active")
+        if is_active is not None:
+            instance.is_active = bool(is_active)
+            instance.save(update_fields=["is_active"])
+        return Response(DoctorSerializer(instance).data)
+
+
+class SpecialtyCreateView(generics.CreateAPIView):
+    queryset = Specialty.objects.all()
+    serializer_class = SpecialtySerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+
+class SpecialtyUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = Specialty.objects.all()
+    serializer_class = SpecialtySerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+
+class SpecialtyDeleteView(generics.DestroyAPIView):
+    queryset = Specialty.objects.all()
+    serializer_class = SpecialtySerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 
-from apps.users.permissions import IsSelfOrAdmin
+from apps.users.permissions import IsSelfOrAdmin, IsAdminUser
 from apps.users.serializers import (
     RegisterSerializer,
     VerifyOtpSerializer,
@@ -89,3 +89,33 @@ class ResendOtpView(APIView):
         otp = generate_otp(user, "email_verify")
         send_otp_email(otp)
         return Response({"detail": "Yangi kod yuborildi"}, status=status.HTTP_200_OK)
+
+
+class AdminUserListView(generics.ListAPIView):
+    queryset = User.objects.all().order_by("-date_joined")
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        role = self.request.query_params.get("role")
+        if role:
+            queryset = queryset.filter(role=role)
+        return queryset
+
+
+class AdminUserUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        role = request.data.get("role")
+        is_active = request.data.get("is_active")
+        if role is not None:
+            instance.role = role
+        if is_active is not None:
+            instance.is_active = bool(is_active)
+        instance.save()
+        return Response(UserSerializer(instance).data)

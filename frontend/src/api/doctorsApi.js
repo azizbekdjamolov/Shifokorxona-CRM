@@ -19,3 +19,13 @@ export const deleteSchedule = (id) => axiosInstance.delete(`/doctors/me/schedule
 export const createDoctor = (data) => axiosInstance.post("/doctors/create/", data);
 
 export const updateDoctor = (id, data) => axiosInstance.patch(`/doctors/${id}/update/`, data);
+
+export const getAdminDoctors = (params) => axiosInstance.get("/doctors/admin/", { params });
+
+export const toggleDoctor = (id, data) => axiosInstance.patch(`/doctors/admin/${id}/toggle/`, data);
+
+export const createSpecialty = (data) => axiosInstance.post("/doctors/specialties/create/", data);
+
+export const updateSpecialty = (id, data) => axiosInstance.patch(`/doctors/specialties/${id}/`, data);
+
+export const deleteSpecialty = (id) => axiosInstance.delete(`/doctors/specialties/${id}/delete/`);
