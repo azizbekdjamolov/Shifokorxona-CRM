@@ -104,5 +104,10 @@
     "text": "Review text",
     "placeholder": "Your opinion about the doctor...",
     "submit": "Submit"
+  },
+  "roles": {
+    "patient": "Patient",
+    "doctor": "Doctor",
+    "admin": "Administrator"
   }
 }

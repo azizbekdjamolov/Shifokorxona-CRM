@@ -104,5 +104,10 @@
     "text": "Sharh matni",
     "placeholder": "Shifokor haqida fikringiz...",
     "submit": "Yuborish"
+  },
+  "roles": {
+    "patient": "Bemor",
+    "doctor": "Shifokor",
+    "admin": "Administrator"
   }
 }

@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "./context/AuthContext";
 import ThemeToggle from "./components/ThemeToggle";
 import LanguageSwitcher from "./components/LanguageSwitcher";
+import LoginModal from "./pages/auth/LoginModal";
 import PublicRoutes from "./routes/PublicRoutes";
 import UserRoutes from "./routes/UserRoutes";
 import DoctorRoutes from "./routes/DoctorRoutes";
@@ -11,6 +13,7 @@ import AdminRoutes from "./routes/AdminRoutes";
 export default function App() {
   const { user, logout } = useAuth();
   const { t } = useTranslation();
+  const [showLogin, setShowLogin] = useState(false);
 
   const navLinkClass = ({ isActive }) =>
     isActive ? "nav-link nav-link-active" : "nav-link";
@@ -76,11 +79,21 @@ export default function App() {
           <LanguageSwitcher />
           {user ? (
             <div className="user-menu">
-              <span>{user.full_name || user.email}</span>
-              <button onClick={logout}>{t("nav.logout")}</button>
+              <span className="user-avatar">
+                {(user.full_name || user.email).charAt(0).toUpperCase()}
+              </span>
+              <span className="user-name">
+                {user.full_name || user.email}
+                <small className="user-role">{t(`roles.${user.role}`)}</small>
+              </span>
+              <button className="btn btn-outline btn-sm btn-logout" onClick={logout}>
+                {t("nav.logout")}
+              </button>
             </div>
           ) : (
-            <span className="guest-label">{t("nav.loggedOut")}</span>
+            <button className="btn btn-primary btn-sm btn-login" onClick={() => setShowLogin(true)}>
+              {t("auth.login")}
+            </button>
           )}
         </div>
       </header>
@@ -91,6 +104,12 @@ export default function App() {
         <AdminRoutes />
       </main>
       <footer className="app-footer">Shifokorxona CRM © 2026</footer>
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onSuccess={() => setShowLogin(false)}
+        />
+      )}
     </div>
   );
 }
