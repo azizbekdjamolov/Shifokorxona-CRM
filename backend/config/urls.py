@@ -13,6 +13,7 @@ urlpatterns = [
     path("api/bookings/", include("apps.bookings.urls")),
     path("api/prescriptions/", include("apps.prescriptions.urls")),
     path("api/reviews/", include("apps.reviews.urls")),
+    path("api/notifications/", include("apps.notifications.urls")),
 ]
 
 if settings.DEBUG:

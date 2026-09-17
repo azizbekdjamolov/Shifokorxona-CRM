@@ -136,6 +136,10 @@ CELERY_BEAT_SCHEDULE = {
         "task": "apps.bookings.tasks.expire_hold_bookings",
         "schedule": 60.0,
     },
+    "send-medication-reminders-every-minute": {
+        "task": "apps.notifications.tasks.send_due_medication_reminders",
+        "schedule": 60.0,
+    },
 }
 
 CACHE = {
