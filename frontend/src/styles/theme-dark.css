@@ -1,33 +1,57 @@
 [data-theme="dark"] {
-  --bg: #111827;
-  --surface: #1f2937;
-  --surface-hover: #374151;
-  --text: #f3f4f6;
-  --text-muted: #9ca3af;
-  --border: #374151;
-  --primary: #14b8a6;
-  --primary-hover: #0d9488;
+  --bg: #0b0f1a;
+  --surface: #12182b;
+  --surface-hover: #1d2440;
+  --surface-soft: #171f38;
+  --text: #eef1f8;
+  --text-muted: #8892ad;
+  --border: #232c4a;
+  --primary: #818cf8;
+  --primary-hover: #a5b4fc;
+  --primary-soft: #1f2a55;
+  --accent: #a78bfa;
+  --accent-hover: #c4b5fd;
+  --accent-soft: #2b2350;
   --primary-text: #ffffff;
-  --danger: #ef4444;
-  --danger-hover: #dc2626;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --danger: #fb7185;
+  --danger-hover: #f87171;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --info: #60a5fa;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55);
+  --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --gradient-soft: linear-gradient(135deg, #1f2a55 0%, #2b2350 100%);
   --status-hold: #f59e0b;
-  --status-confirmed: #3b82f6;
-  --status-completed: #22c55e;
-  --status-cancelled: #ef4444;
+  --status-confirmed: #60a5fa;
+  --status-completed: #34d399;
+  --status-cancelled: #f87171;
+}
+
+[data-theme="dark"] .app-header {
+  background: rgba(11, 15, 26, 0.82);
 }
 
 [data-theme="dark"] .modal-backdrop {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.65);
+}
+
+[data-theme="dark"] .modal {
+  background: var(--surface);
 }
 
 [data-theme="dark"] .hero {
-  background: linear-gradient(135deg, #0f766e, #0d9488);
+  background: linear-gradient(135deg, #4338ca 0%, #6d28d9 50%, #7c3aed 100%);
+}
+
+[data-theme="dark"] .hero .btn-primary {
+  background: #fff;
+  color: #4338ca;
 }
 
 [data-theme="dark"] .star {
-  color: #374151;
+  color: #38405f;
 }
 
 [data-theme="dark"] .auth-form input,
@@ -35,7 +59,18 @@
 [data-theme="dark"] .auth-form textarea,
 [data-theme="dark"] .filter-bar input,
 [data-theme="dark"] .filter-bar select {
-  background: #111827;
-  border-color: #374151;
+  background: var(--bg);
+  border-color: var(--border);
   color: var(--text);
+}
+
+[data-theme="dark"] .stat-card b {
+  background: linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="dark"] .status-badge {
+  color: #0b0f1a;
 }
