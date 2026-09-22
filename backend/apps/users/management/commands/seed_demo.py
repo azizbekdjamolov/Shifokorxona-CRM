@@ -53,15 +53,30 @@ DEMO_DOCTORS = [
 class Command(BaseCommand):
     help = "Demo ma'lumotlar: 1 admin + 10 shifokor (idempotent, parollar terminalda)"
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--fixed-password",
+            help="Barcha demo hisoblarga shu parolni o'rnatish (demo/staging uchun).",
+        )
+        parser.add_argument(
+            "--reset-passwords",
+            action="store_true",
+            help="Mavjud demo hisoblarga ham parolni qayta o'rnatish (idempotent emas, ogoh bo'ling).",
+        )
+
     @transaction.atomic
     def handle(self, *args, **options):
         from apps.users.services.otp_service import issue_tokens_for_user  # noqa: F401
 
+        fixed_password = options.get("fixed_password")
+        reset_mode = bool(options.get("reset_passwords") or fixed_password)
         created_credentials = []
+        updated_credentials = []
 
         admin_email = "admin@shifokorxona.uz"
-        if not User.objects.filter(email__iexact=admin_email).exists():
-            password = _random_password()
+        admin_user = User.objects.filter(email__iexact=admin_email).first()
+        if admin_user is None:
+            password = fixed_password or _random_password()
             User.objects.create_superuser(
                 username=admin_email,
                 email=admin_email,
@@ -72,44 +87,56 @@ class Command(BaseCommand):
                 last_name="Administratori",
             )
             created_credentials.append((admin_email, password))
+        elif reset_mode:
+            password = fixed_password or _random_password()
+            admin_user.set_password(password)
+            admin_user.save(update_fields=["password"])
+            updated_credentials.append((admin_email, password))
 
         specialties = {s.slug: s for s in Specialty.objects.all()}
 
         for prefix, first, last, spec_slug, exp in DEMO_DOCTORS:
             email = f"{prefix}@shifokorxona.uz"
-            if User.objects.filter(email__iexact=email).exists():
-                continue
-            password = _random_password()
-            user = User.objects.create_user(
-                username=email,
-                email=email,
-                password=password,
-                role=User.Role.DOCTOR,
-                is_email_verified=True,
-                first_name=first,
-                last_name=last,
-            )
-            Doctor.objects.create(
-                user=user,
-                specialty=specialties.get(spec_slug),
-                is_active=True,
-                experience_years=exp,
-                price=100_000,
-            )
-            for weekday in DoctorSchedule.Weekday:
-                DoctorSchedule.objects.get_or_create(
-                    doctor=user.doctor_profile,
-                    weekday=weekday,
-                    defaults={"start_time": "09:00", "end_time": "17:00", "is_working": weekday < 5},
+            user = User.objects.filter(email__iexact=email).first()
+            if user is None:
+                password = fixed_password or _random_password()
+                user = User.objects.create_user(
+                    username=email,
+                    email=email,
+                    password=password,
+                    role=User.Role.DOCTOR,
+                    is_email_verified=True,
+                    first_name=first,
+                    last_name=last,
                 )
-            created_credentials.append((email, password))
+                Doctor.objects.create(
+                    user=user,
+                    specialty=specialties.get(spec_slug),
+                    is_active=True,
+                    experience_years=exp,
+                    price=100_000,
+                )
+                for weekday in DoctorSchedule.Weekday:
+                    DoctorSchedule.objects.get_or_create(
+                        doctor=user.doctor_profile,
+                        weekday=weekday,
+                        defaults={"start_time": "09:00", "end_time": "17:00", "is_working": weekday < 5},
+                    )
+                created_credentials.append((email, password))
+            elif reset_mode:
+                password = fixed_password or _random_password()
+                user.set_password(password)
+                user.save(update_fields=["password"])
+                updated_credentials.append((email, password))
 
-        for email, password in created_credentials:
+        rows = created_credentials + updated_credentials
+        if rows:
             self.stdout.write(
-                self.style.SUCCESS(f"✓ {email}  →  parol: {password}")
+                self.style.SUCCESS("Demo hisoblar parollari (terminalga bir marta chiqariladi):")
             )
-
-        if not created_credentials:
+            for email, password in rows:
+                self.stdout.write(self.style.SUCCESS(f"✓ {email}  →  parol: {password}"))
+        else:
             self.stdout.write(
-                self.style.WARNING("Barcha demo hisoblar allaqachon mavjud (o'zgartirilmadi).")
+                self.style.WARNING("Barcha demo hisoblar allaqachon mavjud va parollar saqlanib qoldi.")
             )
