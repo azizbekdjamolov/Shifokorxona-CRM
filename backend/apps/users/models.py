@@ -5,6 +5,8 @@ from django.conf import settings
 
 import random
 
+from django.conf import settings
+
 
 class User(AbstractUser):
     class Role(models.TextChoices):
@@ -38,15 +40,23 @@ class OTP(models.Model):
     code = models.CharField(max_length=6)
     purpose = models.CharField(max_length=20, choices=Purpose.choices)
     is_used = models.BooleanField(default=False)
+    failed_attempts = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
 
     class Meta:
         verbose_name = "OTP kod"
         verbose_name_plural = "OTP kodlar"
+        indexes = [
+            models.Index(fields=["purpose", "is_used", "expires_at"]),
+        ]
 
     def is_valid(self):
-        return not self.is_used and self.expires_at > timezone.now()
+        return (
+            not self.is_used
+            and self.expires_at > timezone.now()
+            and self.failed_attempts < settings.OTP_MAX_ATTEMPTS
+        )
 
     def save(self, *args, **kwargs):
         if not self.code:

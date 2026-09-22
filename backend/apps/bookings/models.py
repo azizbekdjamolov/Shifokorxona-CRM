@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.db.models import Q
 
 
 class Booking(models.Model):
@@ -37,6 +38,13 @@ class Booking(models.Model):
         indexes = [
             models.Index(fields=["doctor", "date", "time"]),
             models.Index(fields=["status", "hold_expires_at"]),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["doctor", "date", "time"],
+                condition=Q(status__in=["hold", "confirmed"]),
+                name="unique_active_booking_slot",
+            ),
         ]
 
     def __str__(self):

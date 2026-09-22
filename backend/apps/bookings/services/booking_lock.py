@@ -1,6 +1,11 @@
+import logging
+
 from django.conf import settings
 from django.core.cache import cache
+from django.db import IntegrityError, transaction
 from django.utils import timezone
+
+logger = logging.getLogger("apps.bookings")
 
 
 def _lock_key(doctor_id, booking_date, booking_time):
@@ -54,3 +59,37 @@ def is_slot_available(doctor_id, booking_date, booking_time):
         time=booking_time,
         status__in=[Booking.Status.HOLD, Booking.Status.CONFIRMED],
     ).exists()
+
+
+@transaction.atomic
+def create_booking_with_hold(user, doctor, date, time):
+    """Bronni atomik yaratadi. DB-diagnostik noyob indeks double-booking ga qarshi
+    kafolat beradi — bir vaqtning o'zida kelgan parallel so'rovlar ham buzilmaydi."""
+    from apps.bookings.models import Booking
+
+    hold_minutes = settings.BOOKING_HOLD_MINUTES
+    key = _lock_key(doctor.id, date, time)
+
+    # Eski muddati o'tgan HOLD bronlarni tozalaymiz
+    expire_stale_holds()
+
+    # Faol (HOLD/CONFIRMED) bron borligini tekshiramiz
+    existing = Booking.objects.filter(
+        doctor=doctor,
+        date=date,
+        time=time,
+        status__in=[Booking.Status.HOLD, Booking.Status.CONFIRMED],
+    ).exists()
+    if existing:
+        return None, {"time": "Bu vaqt allaqachon band"}
+
+    booking = Booking.objects.create(
+        doctor=doctor,
+        date=date,
+        time=time,
+        user=user,
+        status=Booking.Status.HOLD,
+        hold_expires_at=timezone.now() + timezone.timedelta(minutes=hold_minutes),
+    )
+    cache.set(key, "1", timeout=hold_minutes * 60)
+    return booking, None

@@ -4,22 +4,41 @@ from datetime import timedelta
 
 import dj_database_url
 from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-dev-key")
+DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 
-DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() == "true"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = "django-insecure-dev-key"
+    else:
+        raise ImproperlyConfigured(
+            "DJANGO_SECRET_KEY muhit o'zgaruvchisi talab qilinadi (produktsiya muhitida)"
+        )
 
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")]
 if not DEBUG:
-    ALLOWED_HOSTS += os.getenv("DJANGO_ALLOWED_HOSTS_EXTRA", "").split(",")
+    EXTRA = os.getenv("DJANGO_ALLOWED_HOSTS_EXTRA", "")
+    ALLOWED_HOSTS += [h.strip() for h in EXTRA.split(",") if h.strip()]
 
 CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()]
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Xavfsizlik (faqat produktsiyada)
+if not DEBUG:
+    SECURE_SSL_REDIRECT = os.getenv("DJANGO_SECURE_SSL_REDIRECT", "True").lower() == "true"
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -127,9 +146,26 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
-    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ),
     "DEFAULT_PAGINATION_CLASS": "core.pagination.StandardResultsSetPagination",
     "PAGE_SIZE": 20,
+    "DEFAULT_THROTTLE_CLASSES": (
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ),
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "100/day",
+        "user": "1000/day",
+        "register": "5/hour",
+        "verify_otp": "10/hour",
+        "resend_otp": "5/hour",
+        "login": "20/hour",
+    },
+    "EXCEPTION_HANDLER": "core.exceptions.api_exception_handler",
 }
 
 SIMPLE_JWT = {
@@ -145,6 +181,9 @@ CORS_ALLOWED_ORIGINS = [o.strip() for o in os.getenv(
 ).split(",")]
 CORS_ALLOW_CREDENTIALS = True
 
+# LocMemCache — tezkor qatlam. Yakuniy kafolat DB darajasidagi noyob indeks bilan
+# ta'minlanadi (bookings/0004_... migratsiyasi), shuning uchun bir nechta
+# gunicorn worker'da ham double-booking bo'lmaydi.
 CACHE = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
@@ -161,10 +200,55 @@ EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() == "true"
+# Brevo (Sendinblue) V3 transactional email — API kaliti faqat env orqali o'qiladi.
+# Agar aniqlanmasa, email sifatida HTML brendli xabar jo'natilmaydi (log tushadi).
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
+BREVO_ENDPOINT = os.getenv("BREVO_ENDPOINT", "https://api.brevo.com/v3/smtp/email")
+BREVO_SENDER_NAME = os.getenv("BREVO_SENDER_NAME", "Shifokorxona CRM")
+
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "shifokorxona@example.com")
 
+# Brevo (Sendinblue) — transactional email. Kalit faqat env orqali, hech qachon kodga yozilmaydi.
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
+BREVO_ENDPOINT = "https://api.brevo.com/v3/smtp/email"
+EMAIL_SENDER_NAME = os.getenv("EMAIL_SENDER_NAME", "Shifokorxona CRM")
+
 OTP_EXPIRATION_MINUTES = 10
+OTP_MAX_ATTEMPTS = 5
 BOOKING_HOLD_MINUTES = 5
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[{asctime}] {levelname} {name} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
+        "apps": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}

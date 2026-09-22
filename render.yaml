@@ -27,6 +27,8 @@ services:
         value: "https://shifokorxona-frontend.onrender.com,https://shifokorxona-backend.onrender.com"
       - key: FRONTEND_URL
         value: "https://shifokorxona-frontend.onrender.com"
+      - key: BREVO_API_KEY
+        sync: false
       - key: DATABASE_URL
         fromDatabase:
           name: shifokorxona-db

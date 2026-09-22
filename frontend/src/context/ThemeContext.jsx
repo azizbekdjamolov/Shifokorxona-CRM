@@ -6,7 +6,7 @@ const THEME_STORAGE_KEY = "shifokorxona_theme";
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem(THEME_STORAGE_KEY) || "light";
+    return localStorage.getItem(THEME_STORAGE_KEY) || "dark";
   });
 
   useEffect(() => {

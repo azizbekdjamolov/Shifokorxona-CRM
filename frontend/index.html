@@ -3,7 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shifokorxona CRM</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230ea5e9'/%3E%3Cpath d='M8 40h10l6-16 9 24 8-28 6 20h9' fill='none' stroke='%23ffffff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+    <title>Shifokorxona CRM — onlayn klinika tizimi</title>
+    <meta
+      name="description"
+      content="Shifokorxona CRM — shifokorlar bilan onlayn uchrashuv band qilish, navbat, retsept va sharhlar boshqaruvi uchun zamonaviy tizim."
+    />
+    <meta name="keywords" content="shifokor, crm, onlayn uchrashuv, navbat, retsept, klinika" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Shifokorxona CRM" />
+    <meta property="og:description" content="Onlayn uchrashuv band qilish va klinika boshqaruv tizimi." />
+    <meta name="theme-color" content="#0ea5e9" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (!t) {
+            t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            localStorage.setItem("theme", t);
+          }
+          document.documentElement.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
+    <script>
+      (function () {
+        try {
+          var root = document.documentElement;
+          var saved = localStorage.getItem("shifokorxona_theme");
+          var theme = saved || "dark";
+          root.setAttribute("data-theme", theme);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

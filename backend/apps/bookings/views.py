@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -44,7 +45,7 @@ class DoctorTodayQueueView(generics.ListAPIView):
     permission_classes = [IsDoctorUser]
 
     def get_queryset(self):
-        today = timezone.now().date()
+        today = timezone.localdate()
         return (
             Booking.objects.filter(doctor__user=self.request.user, date=today)
             .exclude(status=Booking.Status.CANCELLED)
@@ -55,8 +56,15 @@ class DoctorTodayQueueView(generics.ListAPIView):
 
 class BookingUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = BookingStatusSerializer
-    queryset = Booking.objects.all()
     permission_classes = [IsDoctorUser]
+
+    def get_queryset(self):
+        """IDAOR (Insecure Direct Object Reference) himoyasi:
+        shifokor faqat o'zining bronlarini boshqarishi mumkin."""
+        return (
+            Booking.objects.filter(doctor__user=self.request.user)
+            .select_related("doctor__user", "user")
+        )
 
 
 class PatientBookingCancelView(generics.UpdateAPIView):
@@ -64,8 +72,6 @@ class PatientBookingCancelView(generics.UpdateAPIView):
     permission_classes = [IsPatientUser]
 
     def get_object(self):
-        from django.shortcuts import get_object_or_404
-
         return get_object_or_404(
             Booking,
             user=self.request.user,

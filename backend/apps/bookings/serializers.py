@@ -3,6 +3,7 @@ from django.utils import timezone
 
 from apps.bookings.models import Booking
 from apps.doctors.serializers import DoctorSerializer
+from apps.bookings.services.booking_lock import release_hold
 
 
 class BookingSerializer(serializers.ModelSerializer):
@@ -38,30 +39,29 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         date = attrs["date"]
         time = attrs["time"]
 
-        if date < timezone.now().date():
-            raise serializers.ValidationError({"date": "O'tgan sanaga bron qilib bo'lmaydi"})
-
         from apps.bookings.services.booking_lock import is_slot_available
+
+        if date < timezone.localdate():
+            raise serializers.ValidationError({"date": "O'tgan sanaga bron qilib bo'lmaydi"})
 
         if not is_slot_available(doctor.id, date, time):
             raise serializers.ValidationError({"time": "Bu vaqt allaqachon band"})
         return attrs
 
     def create(self, validated_data):
-        from apps.bookings.services.booking_lock import create_hold
+        from apps.bookings.services.booking_lock import create_booking_with_hold
 
         doctor = validated_data["doctor"]
         date = validated_data["date"]
         time = validated_data["time"]
-        if not create_hold(doctor.id, date, time):
-            raise serializers.ValidationError({"time": "Bu vaqt allaqachon band"})
-
-        booking = Booking.objects.create(
-            **validated_data,
+        booking, error = create_booking_with_hold(
             user=self.context["request"].user,
-            status=Booking.Status.HOLD,
-            hold_expires_at=timezone.now() + timezone.timedelta(minutes=5),
+            doctor=doctor,
+            date=date,
+            time=time,
         )
+        if error:
+            raise serializers.ValidationError(error)
         return booking
 
 
@@ -80,8 +80,6 @@ class BookingStatusSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-        from apps.bookings.services.booking_lock import release_hold
-
         instance.status = validated_data["status"]
         if instance.status == Booking.Status.CONFIRMED:
             instance.hold_expires_at = None
