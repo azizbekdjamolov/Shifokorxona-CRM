@@ -29,7 +29,8 @@ export default function RegisterPage() {
     setLoading(true);
     setError("");
     try {
-      await registerUser(form);
+      const data = await registerUser(form);
+      if (data.tokens) return;
       setPendingEmail(form.email);
       setStep("otp");
     } catch (err) {

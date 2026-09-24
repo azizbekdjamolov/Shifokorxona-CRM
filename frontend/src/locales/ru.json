@@ -11,6 +11,7 @@
     "adminPanel": "Панель админа",
     "users": "Пользователи",
     "bookings": "Брони",
+    "profile": "Профиль",
     "logout": "Выйти",
     "loggedOut": "Не вошли"
   },
@@ -27,7 +28,8 @@
     "deleteQuestion": "Удалить запись?",
     "send": "Отправить",
     "update": "Обновить",
-    "empty": "Данные не найдены"
+    "empty": "Данные не найдены",
+    "error": "Произошла ошибка"
   },
   "home": {
     "heroTitle": "Добро пожаловать в Shifokorxona CRM",
@@ -120,5 +122,16 @@
     "patient": "Пациент",
     "doctor": "Врач",
     "admin": "Администратор"
+  },
+  "profile": {
+    "title": "Мой профиль",
+    "personalInfo": "Личные данные",
+    "changePassword": "Смена пароля",
+    "currentPassword": "Текущий пароль",
+    "newPassword": "Новый пароль",
+    "confirmNewPassword": "Повторите новый пароль",
+    "updatePassword": "Обновить пароль",
+    "saved": "Данные сохранены",
+    "role": "Роль"
   }
 }

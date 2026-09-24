@@ -11,6 +11,7 @@
     "adminPanel": "Admin panel",
     "users": "Userlar",
     "bookings": "Bronlar",
+    "profile": "Profil",
     "logout": "Chiqish",
     "loggedOut": "Kirilmagan"
   },
@@ -27,7 +28,8 @@
     "deleteQuestion": "Yozuvni o'chirasizmi?",
     "send": "Yuborish",
     "update": "Yangilash",
-    "empty": "Ma'lumot topilmadi"
+    "empty": "Ma'lumot topilmadi",
+    "error": "Xatolik yuz berdi"
   },
   "home": {
     "heroTitle": "Shifokorxona CRM ga xush kelibsiz",
@@ -120,5 +122,16 @@
     "patient": "Bemor",
     "doctor": "Shifokor",
     "admin": "Administrator"
+  },
+  "profile": {
+    "title": "Mening profilim",
+    "personalInfo": "Shaxsiy ma'lumotlar",
+    "changePassword": "Parolni o'zgartirish",
+    "currentPassword": "Joriy parol",
+    "newPassword": "Yangi parol",
+    "confirmNewPassword": "Yangi parolni takrorlang",
+    "updatePassword": "Parolni yangilash",
+    "saved": "Ma'lumotlar saqlandi",
+    "role": "Rol"
   }
 }

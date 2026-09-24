@@ -7,6 +7,7 @@ import PublicRoutes from "./routes/PublicRoutes";
 import UserRoutes from "./routes/UserRoutes";
 import DoctorRoutes from "./routes/DoctorRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
+import ProfileRoutes from "./routes/ProfileRoutes";
 
 export default function App() {
   const { user, logout } = useAuth();
@@ -70,6 +71,11 @@ export default function App() {
               </NavLink>
             </>
           )}
+          {user && (
+            <NavLink to="/profile" className={navLinkClass}>
+              {t("nav.profile")}
+            </NavLink>
+          )}
         </nav>
         <div className="header-actions">
           <ThemeToggle />
@@ -99,6 +105,7 @@ export default function App() {
         <UserRoutes />
         <DoctorRoutes />
         <AdminRoutes />
+        <ProfileRoutes />
       </main>
       <footer className="app-footer">Shifokorxona CRM © 2026</footer>
     </div>

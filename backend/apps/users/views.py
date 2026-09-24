@@ -2,6 +2,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from apps.users.permissions import IsSelfOrAdmin, IsAdminUser
@@ -24,6 +25,18 @@ class RegisterView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        if not settings.REGISTRATION_REQUIRE_EMAIL_VERIFY:
+            user.is_email_verified = True
+            user.save(update_fields=["is_email_verified"])
+            tokens = issue_tokens_for_user(user)
+            return Response(
+                {
+                    "detail": "Ro'yxatdan o'tish muvaffaqiyatli",
+                    "user": UserSerializer(user).data,
+                    "tokens": tokens,
+                },
+                status=status.HTTP_201_CREATED,
+            )
         return Response(
             {
                 "detail": "Emailingizga tasdiqlash kodi yuborildi",

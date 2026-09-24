@@ -11,6 +11,7 @@
     "adminPanel": "Admin Panel",
     "users": "Users",
     "bookings": "Bookings",
+    "profile": "Profile",
     "logout": "Logout",
     "loggedOut": "Not signed in"
   },
@@ -27,7 +28,8 @@
     "deleteQuestion": "Delete this entry?",
     "send": "Send",
     "update": "Update",
-    "empty": "No data found"
+    "empty": "No data found",
+    "error": "Something went wrong"
   },
   "home": {
     "heroTitle": "Welcome to Shifokorxona CRM",
@@ -120,5 +122,16 @@
     "patient": "Patient",
     "doctor": "Doctor",
     "admin": "Administrator"
+  },
+  "profile": {
+    "title": "My Profile",
+    "personalInfo": "Personal info",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Repeat new password",
+    "updatePassword": "Update password",
+    "saved": "Data saved",
+    "role": "Role"
   }
 }
