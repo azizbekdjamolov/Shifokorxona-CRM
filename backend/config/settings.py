@@ -184,7 +184,7 @@ CORS_ALLOW_CREDENTIALS = True
 # LocMemCache — tezkor qatlam. Yakuniy kafolat DB darajasidagi noyob indeks bilan
 # ta'minlanadi (bookings/0004_... migratsiyasi), shuning uchun bir nechta
 # gunicorn worker'da ham double-booking bo'lmaydi.
-CACHE = {
+CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": "shifokorxona-cache",

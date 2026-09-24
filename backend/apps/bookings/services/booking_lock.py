@@ -64,7 +64,11 @@ def is_slot_available(doctor_id, booking_date, booking_time):
 @transaction.atomic
 def create_booking_with_hold(user, doctor, date, time):
     """Bronni atomik yaratadi. DB-diagnostik noyob indeks double-booking ga qarshi
-    kafolat beradi — bir vaqtning o'zida kelgan parallel so'rovlar ham buzilmaydi."""
+    kafolat beradi — bir vaqtning o'zida kelgan parallel so'rovlar ham buzilmaydi.
+
+    Race holatda (2 ta parallel bron) IntegrityError ushlanib, xushomadli 400
+    qaytariladi (500 o'rniga).
+    """
     from apps.bookings.models import Booking
 
     hold_minutes = settings.BOOKING_HOLD_MINUTES
@@ -83,13 +87,17 @@ def create_booking_with_hold(user, doctor, date, time):
     if existing:
         return None, {"time": "Bu vaqt allaqachon band"}
 
-    booking = Booking.objects.create(
-        doctor=doctor,
-        date=date,
-        time=time,
-        user=user,
-        status=Booking.Status.HOLD,
-        hold_expires_at=timezone.now() + timezone.timedelta(minutes=hold_minutes),
-    )
+    try:
+        booking = Booking.objects.create(
+            doctor=doctor,
+            date=date,
+            time=time,
+            user=user,
+            status=Booking.Status.HOLD,
+            hold_expires_at=timezone.now() + timezone.timedelta(minutes=hold_minutes),
+        )
+    except IntegrityError:
+        return None, {"time": "Bu vaqt allaqachon band"}
+
     cache.set(key, "1", timeout=hold_minutes * 60)
     return booking, None

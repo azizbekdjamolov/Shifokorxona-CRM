@@ -10,6 +10,7 @@ from apps.bookings.serializers import (
     BookingCreateSerializer,
     BookingStatusSerializer,
 )
+from apps.bookings.services.booking_lock import expire_stale_holds
 from apps.users.permissions import IsPatientUser, IsDoctorUser, IsAdminUser
 
 
@@ -18,6 +19,7 @@ class MyBookingsView(generics.ListCreateAPIView):
     permission_classes = [IsPatientUser]
 
     def get_queryset(self):
+        expire_stale_holds()
         return (
             Booking.objects.filter(user=self.request.user)
             .select_related("doctor", "doctor__user", "doctor__specialty")
@@ -34,6 +36,7 @@ class DoctorBookingsView(generics.ListAPIView):
     permission_classes = [IsDoctorUser]
 
     def get_queryset(self):
+        expire_stale_holds()
         return (
             Booking.objects.filter(doctor__user=self.request.user)
             .select_related("user", "doctor", "doctor__user", "doctor__specialty")
@@ -45,6 +48,7 @@ class DoctorTodayQueueView(generics.ListAPIView):
     permission_classes = [IsDoctorUser]
 
     def get_queryset(self):
+        expire_stale_holds()
         today = timezone.localdate()
         return (
             Booking.objects.filter(doctor__user=self.request.user, date=today)
@@ -61,6 +65,7 @@ class BookingUpdateView(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         """IDAOR (Insecure Direct Object Reference) himoyasi:
         shifokor faqat o'zining bronlarini boshqarishi mumkin."""
+        expire_stale_holds()
         return (
             Booking.objects.filter(doctor__user=self.request.user)
             .select_related("doctor__user", "user")
@@ -99,6 +104,7 @@ class AdminBookingsView(generics.ListAPIView):
     permission_classes = [IsAdminUser]
 
     def get_queryset(self):
+        expire_stale_holds()
         queryset = Booking.objects.select_related("user", "doctor", "doctor__user")
         qs = self.request.query_params.get("status")
         if qs:

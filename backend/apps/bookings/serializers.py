@@ -77,6 +77,15 @@ class BookingStatusSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 f"'{booking.status}' holatidan '{value}' holatiga o'tib bo'lmaydi"
             )
+        if (
+            booking.status == Booking.Status.HOLD
+            and value == Booking.Status.CONFIRMED
+            and booking.is_hold_expired
+        ):
+            raise serializers.ValidationError(
+                "Vaqtinchalik bandlik (5 daqiqa) muddati o'tgan — "
+                "bronni bekor qilib, qayta bron qiling"
+            )
         return value
 
     def update(self, instance, validated_data):
