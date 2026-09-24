@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getMyBookings, cancelMyBooking } from "../../api/bookingsApi";
+import { getPaymentProviders, initiatePayment, mockPay, cancelPayment } from "../../api/paymentsApi";
 
 const statusText = {
   hold: "Vaqtinchalik band",
@@ -10,13 +11,25 @@ const statusText = {
   cancelled: "Bekor qilingan",
 };
 
+const paymentText = {
+  pending: "Kutilmoqda",
+  paid: "To'langan",
+  cancelled: "Bekor qilingan",
+  failed: "Muvaffaqiyatsiz",
+};
+
 export default function MyQueue() {
   const { t } = useTranslation();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [providers, setProviders] = useState([]);
+  const [busy, setBusy] = useState({});
 
   useEffect(() => {
     load();
+    getPaymentProviders()
+      .then((res) => setProviders(res.data.providers || []))
+      .catch(() => {});
   }, []);
 
   const load = () =>
@@ -25,8 +38,27 @@ export default function MyQueue() {
       .finally(() => setLoading(false));
 
   const handleCancel = async (id) => {
-    if (!window.confirm("Bronni bekor qilasizmi?")) return;
+    if (!window.confirm(t("common.confirmQuestion"))) return;
     await cancelMyBooking(id);
+    load();
+  };
+
+  const handlePay = async (booking) => {
+    setBusy((s) => ({ ...s, [booking.id]: "init" }));
+    try {
+      const { data } = await initiatePayment(booking.id, providers[0]?.key || "mock");
+      await mockPay(data.id);
+      load();
+    } catch {
+      alert(t("common.error"));
+    } finally {
+      setBusy((s) => ({ ...s, [booking.id]: undefined }));
+    }
+  };
+
+  const handleCancelPayment = async (payment) => {
+    if (!window.confirm(t("payments.cancelPayment"))) return;
+    await cancelPayment(payment.id);
     load();
   };
 
@@ -58,9 +90,34 @@ export default function MyQueue() {
                 {t("queue.leaveReview")}
               </Link>
             )}
+            {b.status === "confirmed" && (
+              <>
+                <p className="hint">
+                  {t("doctor.price")}: {b.doctor.price} so'm
+                </p>
+                {!b.payments || b.payments.status === "cancelled" || b.payments.status === "failed" ? (
+                  <button
+                    className="btn btn-primary"
+                    disabled={!!busy[b.id]}
+                    onClick={() => handlePay(b)}
+                  >
+                    {busy[b.id] ? t("common.loading") : t("queue.pay")}
+                  </button>
+                ) : (
+                  <p className={`status-badge status-${b.payments.status}`}>
+                    {t(`payments.${b.payments.status}`)} ({b.payments.provider})
+                  </p>
+                )}
+              </>
+            )}
             {(b.status === "hold" || b.status === "confirmed") && (
               <button className="btn btn-danger" onClick={() => handleCancel(b.id)}>
                 {t("queue.cancel")}
+              </button>
+            )}
+            {b.payments?.status === "pending" && (
+              <button className="btn btn-outline" onClick={() => handleCancelPayment(b.payments)}>
+                {t("payments.cancelPayment")}
               </button>
             )}
           </div>

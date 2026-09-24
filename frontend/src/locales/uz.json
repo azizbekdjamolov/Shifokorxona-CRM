@@ -11,6 +11,8 @@
     "adminPanel": "Admin panel",
     "users": "Userlar",
     "bookings": "Bronlar",
+    "payments": "To'lovlar",
+    "myPayments": "To'lovlarim",
     "profile": "Profil",
     "logout": "Chiqish",
     "loggedOut": "Kirilmagan"
@@ -100,7 +102,26 @@
     "cancelled": "Bekor qilingan",
     "cancel": "Bekor qilish",
     "leaveReview": "Sharh qoldirish",
-    "holdWarning": "gacha tasdiqlanishi kerak"
+    "holdWarning": "gacha tasdiqlanishi kerak",
+    "pay": "To'lash",
+    "payWith": "To'lov usuli",
+    "payNow": "To'lovni boshlash"
+  },
+  "payments": {
+    "title": "To'lovlarim",
+    "amount": "Summa",
+    "provider": "Provayder",
+    "status": "Holat",
+    "pending": "Kutilmoqda",
+    "paid": "To'langan",
+    "cancelled": "Bekor qilingan",
+    "failed": "Muvaffaqiyatsiz",
+    "date": "Sana",
+    "doctor": "Shifokor",
+    "mockPay": "Sinov to'lovi (Mock)",
+    "mockDone": "Sinov to'lovi muvaffaqiyatli!",
+    "cancelPayment": "To'lovni bekor qilish",
+    "noPayments": "To'lovlar yo'q"
   },
   "prescriptions": {
     "title": "Mening retseptlarim",

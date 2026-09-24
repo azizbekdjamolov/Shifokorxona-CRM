@@ -23,6 +23,7 @@ class MyBookingsView(generics.ListCreateAPIView):
         return (
             Booking.objects.filter(user=self.request.user)
             .select_related("doctor", "doctor__user", "doctor__specialty")
+            .prefetch_related("payments")
         )
 
     def get_serializer_class(self):

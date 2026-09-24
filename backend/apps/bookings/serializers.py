@@ -10,6 +10,7 @@ class BookingSerializer(serializers.ModelSerializer):
     doctor = DoctorSerializer(read_only=True)
     patient_name = serializers.CharField(source="user.get_full_name", read_only=True)
     status_display = serializers.CharField(source="get_status_display", read_only=True)
+    payments = serializers.SerializerMethodField()
 
     class Meta:
         model = Booking
@@ -24,9 +25,22 @@ class BookingSerializer(serializers.ModelSerializer):
             "status_display",
             "hold_expires_at",
             "is_hold_expired",
+            "payments",
             "created_at",
         ]
         read_only_fields = ["user"]
+
+    def get_payments(self, obj):
+        payment = obj.payments.order_by("-created_at").first()
+        if not payment:
+            return None
+        return {
+            "id": payment.id,
+            "amount": str(payment.amount),
+            "provider": payment.provider,
+            "status": payment.status,
+            "transaction_id": payment.transaction_id,
+        }
 
 
 class BookingCreateSerializer(serializers.ModelSerializer):

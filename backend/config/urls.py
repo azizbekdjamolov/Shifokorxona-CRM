@@ -17,6 +17,7 @@ urlpatterns = [
     path("api/prescriptions/", include("apps.prescriptions.urls")),
     path("api/reviews/", include("apps.reviews.urls")),
     path("api/notifications/", include("apps.notifications.urls")),
+    path("api/payments/", include("apps.payments.urls")),
 ]
 
 if settings.DEBUG:
