@@ -11,8 +11,6 @@
     "adminPanel": "Панель админа",
     "users": "Пользователи",
     "bookings": "Брони",
-    "payments": "Платежи",
-    "myPayments": "Мои платежи",
     "profile": "Профиль",
     "logout": "Выйти",
     "loggedOut": "Не вошли"
@@ -102,26 +100,7 @@
     "cancelled": "Отменено",
     "cancel": "Отменить",
     "leaveReview": "Оставить отзыв",
-    "holdWarning": "подтвердить до",
-    "pay": "Оплатить",
-    "payWith": "Способ оплаты",
-    "payNow": "Начать оплату"
-  },
-  "payments": {
-    "title": "Мои платежи",
-    "amount": "Сумма",
-    "provider": "Провайдер",
-    "status": "Статус",
-    "pending": "В ожидании",
-    "paid": "Оплачено",
-    "cancelled": "Отменено",
-    "failed": "Не удалось",
-    "date": "Дата",
-    "doctor": "Врач",
-    "mockPay": "Тестовый платёж (Mock)",
-    "mockDone": "Тестовый платёж успешен!",
-    "cancelPayment": "Отменить платёж",
-    "noPayments": "Платежей нет"
+    "holdWarning": "подтвердить до"
   },
   "prescriptions": {
     "title": "Мои рецепты",

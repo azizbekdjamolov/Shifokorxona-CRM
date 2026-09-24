@@ -11,8 +11,6 @@
     "adminPanel": "Admin Panel",
     "users": "Users",
     "bookings": "Bookings",
-    "payments": "Payments",
-    "myPayments": "My Payments",
     "profile": "Profile",
     "logout": "Logout",
     "loggedOut": "Not signed in"
@@ -102,26 +100,7 @@
     "cancelled": "Cancelled",
     "cancel": "Cancel",
     "leaveReview": "Leave a review",
-    "holdWarning": "must be confirmed before",
-    "pay": "Pay",
-    "payWith": "Payment method",
-    "payNow": "Start payment"
-  },
-  "payments": {
-    "title": "My Payments",
-    "amount": "Amount",
-    "provider": "Provider",
-    "status": "Status",
-    "pending": "Pending",
-    "paid": "Paid",
-    "cancelled": "Cancelled",
-    "failed": "Failed",
-    "date": "Date",
-    "doctor": "Doctor",
-    "mockPay": "Test payment (Mock)",
-    "mockDone": "Test payment successful!",
-    "cancelPayment": "Cancel payment",
-    "noPayments": "No payments"
+    "holdWarning": "must be confirmed before"
   },
   "prescriptions": {
     "title": "My prescriptions",

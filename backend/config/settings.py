@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     "apps.prescriptions",
     "apps.reviews",
     "apps.notifications",
-    "apps.payments",
 ]
 
 MIDDLEWARE = [
@@ -222,14 +221,6 @@ BOOKING_HOLD_MINUTES = 5
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
-
-# To'lov tizimi — mock rejim default (sinov uchun).
-# Haqiqiy Payme/Click ulash: PAYME_MERCHANT_KEY yoki CLICK_SERVICE_ID+CLICK_SECRET_KEY
-# env o'zgaruvchilari berilsa, webhook'lar faollashadi.
-PAYMENT_MOCK = os.getenv("PAYMENT_MOCK", "True").lower() == "true"
-PAYME_MERCHANT_KEY = os.getenv("PAYME_MERCHANT_KEY", "")
-CLICK_SERVICE_ID = os.getenv("CLICK_SERVICE_ID", "")
-CLICK_SECRET_KEY = os.getenv("CLICK_SECRET_KEY", "")
 
 LOGGING = {
     "version": 1,

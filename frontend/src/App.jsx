@@ -40,9 +40,6 @@ export default function App() {
               <NavLink to="/my-prescriptions" className={navLinkClass}>
                 {t("nav.myPrescriptions")}
               </NavLink>
-              <NavLink to="/my-payments" className={navLinkClass}>
-                {t("nav.myPayments")}
-              </NavLink>
             </>
           )}
           {user?.role === "doctor" && (
