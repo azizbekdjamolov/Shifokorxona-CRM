@@ -30,6 +30,13 @@ class MyBookingsView(generics.ListCreateAPIView):
             return BookingCreateSerializer
         return BookingSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        booking = serializer.save()
+        out = BookingSerializer(booking, context={"request": request}).data
+        return Response(out, status=status.HTTP_201_CREATED)
+
 
 class DoctorBookingsView(generics.ListAPIView):
     serializer_class = BookingSerializer
