@@ -4,7 +4,7 @@ export const getMyBookings = () => axiosInstance.get("/bookings/my/");
 
 export const createBooking = (data) => axiosInstance.post("/bookings/my/", data);
 
-export const cancelMyBooking = (id) => axiosInstance.post(`/bookings/my/${id}/cancel/`);
+export const cancelMyBooking = (id) => axiosInstance.patch(`/bookings/my/${id}/cancel/`);
 
 export const getDoctorTodayQueue = () => axiosInstance.get("/bookings/doctor/today/");
 

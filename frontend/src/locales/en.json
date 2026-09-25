@@ -11,6 +11,8 @@
     "adminPanel": "Admin Panel",
     "users": "Users",
     "bookings": "Bookings",
+    "reviews": "Reviews",
+    "messages": "Messages",
     "profile": "Profile",
     "logout": "Logout",
     "loggedOut": "Not signed in"
@@ -109,14 +111,48 @@
     "forDays": "days",
     "medicine": "medicine",
     "instruction": "Instruction",
-    "doctor": "Doctor"
+    "doctor": "Doctor",
+    "pdf": "Download PDF"
   },
   "review": {
     "title": "Leave a review",
     "rating": "Rating",
     "text": "Review text",
     "placeholder": "Your opinion about the doctor...",
-    "submit": "Submit"
+    "submit": "Submit",
+    "none": "No reviews yet"
+  },
+  "chat": {
+    "title": "Messages",
+    "start": "Send message",
+    "placeholder": "Type a message...",
+    "select": "Select a conversation",
+    "empty": "No messages",
+    "error": "Failed to send message",
+    "noSchedule": "Schedule not provided"
+  },
+  "forgot": {
+    "link": "Forgot your password?",
+    "title": "Reset password",
+    "subtitle": "Enter your email and we'll send a code",
+    "send": "Send code",
+    "resetTitle": "Set a new password",
+    "codeHint": "Enter the 6-digit code from your email",
+    "resetBtn": "Update password",
+    "done": "Password updated successfully",
+    "successTitle": "Done!"
+  },
+  "telegram": {
+    "title": "Telegram notifications",
+    "hint": "Link your account to receive Telegram notifications.",
+    "getCode": "Get code",
+    "sendCode": "Send this code to the bot (@ShifokorxonaBot) and confirm:",
+    "confirm": "Confirm",
+    "linked": "Telegram linked",
+    "unlinked": "Telegram unlinked",
+    "connected": "Your account is linked to Telegram",
+    "unlink": "Unlink",
+    "confirmError": "Wrong code. Make sure you sent it to the bot."
   },
   "roles": {
     "patient": "Patient",

@@ -132,3 +132,30 @@ class AdminUserUpdateView(generics.RetrieveUpdateAPIView):
             instance.is_active = bool(is_active)
         instance.save()
         return Response(UserSerializer(instance).data)
+
+
+class PasswordResetRequestView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        from apps.users.serializers import PasswordResetRequestSerializer
+        from apps.users.services.otp_service import generate_otp, send_otp_email
+
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.context["user"]
+        otp = generate_otp(user, "password_reset")
+        send_otp_email(otp)
+        return Response({"detail": "Parolni tiklash kodi emailingizga yuborildi"}, status=status.HTTP_200_OK)
+
+
+class PasswordResetConfirmView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        from apps.users.serializers import PasswordResetConfirmSerializer
+
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"detail": "Parolingiz yangilandi"}, status=status.HTTP_200_OK)

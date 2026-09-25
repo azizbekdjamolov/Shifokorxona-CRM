@@ -3,16 +3,19 @@ import { Link } from "react-router-dom";
 import { getAdminUsers } from "../../api/authApi";
 import { getAdminDoctors } from "../../api/doctorsApi";
 import { getAdminBookings } from "../../api/bookingsApi";
+import { getAdminReviews } from "../../api/reviewsApi";
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     getAdminUsers({ page_size: 100 }).then((res) => setUsers(res.data.results || res.data));
     getAdminDoctors({ page_size: 100 }).then((res) => setDoctors(res.data.results || res.data));
     getAdminBookings({ page_size: 100 }).then((res) => setBookings(res.data.results || res.data));
+    getAdminReviews({ status: "pending", page_size: 100 }).then((res) => setReviews(res.data.results || res.data));
   }, []);
 
   const statusCount = (s) => bookings.filter((b) => b.status === s).length;
@@ -47,6 +50,10 @@ export default function AdminDashboard() {
           <b>{statusCount("completed")}</b>
           <span>Yakunlangan</span>
         </div>
+        <div className="stat-card">
+          <b>{reviews.length}</b>
+          <span>Sharh navbatida</span>
+        </div>
       </div>
       <div className="dashboard-links">
         <Link to="/admin/users" className="btn">
@@ -58,8 +65,11 @@ export default function AdminDashboard() {
         <Link to="/admin/specialties" className="btn">
           Yo'nalishlar
         </Link>
-        <Link to="/admin/bookings" className="btn btn-primary">
+        <Link to="/admin/bookings" className="btn">
           Bronlar
+        </Link>
+        <Link to="/admin/reviews" className="btn btn-primary">
+          📝 Sharhlar ({reviews.length})
         </Link>
       </div>
     </div>

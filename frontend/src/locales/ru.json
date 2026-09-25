@@ -13,7 +13,9 @@
     "bookings": "Брони",
     "profile": "Профиль",
     "logout": "Выйти",
-    "loggedOut": "Не вошли"
+    "loggedOut": "Не вошли",
+    "reviews": "Отзывы",
+    "messages": "Сообщения"
   },
   "common": {
     "loading": "Загрузка...",
@@ -47,7 +49,7 @@
     "search": "Поиск врача...",
     "allSpecialties": "Все направления"
   },
-"auth": {
+  "auth": {
     "loginTitle": "Вход",
     "registerTitle": "Регистрация",
     "verifyTitle": "Подтверждение email",
@@ -109,14 +111,16 @@
     "forDays": "дней",
     "medicine": "препарат",
     "instruction": "Инструкция",
-    "doctor": "Врач"
+    "doctor": "Врач",
+    "pdf": "Скачать PDF"
   },
   "review": {
     "title": "Оставить отзыв",
     "rating": "Оценка",
     "text": "Текст отзыва",
     "placeholder": "Ваше мнение о враче...",
-    "submit": "Отправить"
+    "submit": "Отправить",
+    "none": "Пока нет отзывов"
   },
   "roles": {
     "patient": "Пациент",
@@ -133,5 +137,37 @@
     "updatePassword": "Обновить пароль",
     "saved": "Данные сохранены",
     "role": "Роль"
+  },
+  "chat": {
+    "title": "Сообщения",
+    "start": "Написать",
+    "placeholder": "Введите сообщение...",
+    "select": "Выберите чат",
+    "empty": "Нет сообщений",
+    "error": "Не удалось отправить",
+    "noSchedule": "Расписание не указано"
+  },
+  "forgot": {
+    "link": "Забыли пароль?",
+    "title": "Восстановление пароля",
+    "subtitle": "Введите email — отправим код",
+    "send": "Отправить код",
+    "resetTitle": "Новый пароль",
+    "codeHint": "Введите 6-значный код из письма",
+    "resetBtn": "Обновить пароль",
+    "done": "Пароль успешно обновлён",
+    "successTitle": "Готово!"
+  },
+  "telegram": {
+    "title": "Telegram уведомления",
+    "hint": "Привяжите аккаунт для уведомлений в Telegram.",
+    "getCode": "Получить код",
+    "sendCode": "Отправьте боту (@ShifokorxonaBot) этот код и подтвердите:",
+    "confirm": "Подтвердить",
+    "linked": "Telegram подключён",
+    "unlinked": "Telegram отключён",
+    "connected": "Аккаунт подключён к Telegram",
+    "unlink": "Отключить",
+    "confirmError": "Неверный код. Убедитесь, что отправили его боту."
   }
 }

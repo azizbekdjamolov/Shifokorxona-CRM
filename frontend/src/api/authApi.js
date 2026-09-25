@@ -12,6 +12,10 @@ export const updateMe = (data) => axiosInstance.patch("/users/me/", data);
 
 export const login = (data) => axiosInstance.post("/token/", data);
 
+export const requestPasswordReset = (email) => axiosInstance.post("/users/password-reset/request/", { email });
+
+export const confirmPasswordReset = (data) => axiosInstance.post("/users/password-reset/confirm/", data);
+
 export const getAdminUsers = (params) => axiosInstance.get("/users/admin/", { params });
 
 export const updateAdminUser = (id, data) => axiosInstance.patch(`/users/admin/${id}/`, data);

@@ -63,6 +63,12 @@ export default function App() {
               {t("nav.doctors")}
             </NavLink>
 
+            {user && (
+              <NavLink to="/messages" className={navLinkClass}>
+                💬 {t("nav.messages")}
+              </NavLink>
+            )}
+
             {user?.role === "patient" && (
               <div className="sidebar-group">
                 <span className="sidebar-label">{t("roles.patient")}</span>
@@ -107,6 +113,9 @@ export default function App() {
                 </NavLink>
                 <NavLink to="/admin/bookings" className={navLinkClass}>
                   {t("nav.bookings")}
+                </NavLink>
+                <NavLink to="/admin/reviews" className={navLinkClass}>
+                  📝 {t("nav.reviews")}
                 </NavLink>
               </div>
             )}

@@ -11,6 +11,8 @@
     "adminPanel": "Admin panel",
     "users": "Userlar",
     "bookings": "Bronlar",
+    "reviews": "Sharhlar",
+    "messages": "Xabarlar",
     "profile": "Profil",
     "logout": "Chiqish",
     "loggedOut": "Kirilmagan"
@@ -109,14 +111,48 @@
     "forDays": "kun",
     "medicine": "dori",
     "instruction": "Izoh",
-    "doctor": "Shifokor"
+    "doctor": "Shifokor",
+    "pdf": "PDF yuklab olish"
   },
   "review": {
     "title": "Sharh qoldirish",
     "rating": "Baho",
     "text": "Sharh matni",
     "placeholder": "Shifokor haqida fikringiz...",
-    "submit": "Yuborish"
+    "submit": "Yuborish",
+    "none": "Hozircha sharhlar yo'q"
+  },
+  "chat": {
+    "title": "Xabarlar",
+    "start": "Xabar yozish",
+    "placeholder": "Xabar yozing...",
+    "select": "Suhbatni tanlang",
+    "empty": "Xabarsiz",
+    "error": "Xabar yuborishda xatolik",
+    "noSchedule": "Ish jadvali ko'rsatilmagan"
+  },
+  "forgot": {
+    "link": "Parolingizni unutdingizmi?",
+    "title": "Parolni tiklash",
+    "subtitle": "Emailingizni kiriting, kod yuboramiz",
+    "send": "Kod yuborish",
+    "resetTitle": "Yangi parol o'rnatish",
+    "codeHint": "Emaildagi 6 xonali kodni kiriting",
+    "resetBtn": "Parolni yangilash",
+    "done": "Parol muvaffaqiyatli yangilandi",
+    "successTitle": "Tayyor!"
+  },
+  "telegram": {
+    "title": "Telegram bildirishnomalar",
+    "hint": "Telegram bot orqali bildirishnomalar olish uchun akkountingizni ulang.",
+    "getCode": "Kod olish",
+    "sendCode": "Botga (@ShifokorxonaBot) shu kodni yuboring va quyidagicha tasdiqlang:",
+    "confirm": "Tasdiqlash",
+    "linked": "Telegram ulandi",
+    "unlinked": "Telegram uzildi",
+    "connected": "Akkountingiz Telegram bilan ulangan",
+    "unlink": "Uzish",
+    "confirmError": "Kod noto'g'ri. Kodni botga yuborganingizni tekshiring."
   },
   "roles": {
     "patient": "Bemor",

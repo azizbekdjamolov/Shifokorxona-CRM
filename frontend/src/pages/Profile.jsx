@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
+import {
+  getTelegramLinkCode,
+  confirmTelegramLink,
+  unlinkTelegram,
+} from "../api/notificationsApi";
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -18,6 +23,10 @@ export default function Profile() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [linkCode, setLinkCode] = useState("");
+  const [tgError, setTgError] = useState("");
+  const [tgSuccess, setTgSuccess] = useState("");
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   const handlePassChange = (e) => setPass({ ...pass, [e.target.name]: e.target.value });
@@ -54,6 +63,42 @@ export default function Profile() {
       setError(firstError || t("common.error"));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getCode = async () => {
+    setTgError("");
+    setTgSuccess("");
+    try {
+      const res = await getTelegramLinkCode();
+      setLinkCode(res.data.code);
+    } catch {
+      setTgError(t("common.error"));
+    }
+  };
+
+  const confirmLink = async () => {
+    setTgError("");
+    setTgSuccess("");
+    try {
+      await confirmTelegramLink(linkCode);
+      setTgSuccess(t("telegram.linked"));
+      setLinkCode("");
+      window.location.reload();
+    } catch {
+      setTgError(t("telegram.confirmError"));
+    }
+  };
+
+  const unlink = async () => {
+    setTgError("");
+    setTgSuccess("");
+    try {
+      await unlinkTelegram();
+      setTgSuccess(t("telegram.unlinked"));
+      window.location.reload();
+    } catch {
+      setTgError(t("common.error"));
     }
   };
 
@@ -125,6 +170,42 @@ export default function Profile() {
           {loading ? t("common.loading") : t("profile.updatePassword")}
         </button>
       </form>
+
+      <div className="auth-form telegram-section">
+        <h2>{t("telegram.title")}</h2>
+        {user?.telegram_chat_id ? (
+          <>
+            <p className="success-message">✅ {t("telegram.connected")}</p>
+            <button className="btn btn-danger" onClick={unlink}>
+              {t("telegram.unlink")}
+            </button>
+          </>
+        ) : (
+          <>
+            <p>{t("telegram.hint")}</p>
+            {!linkCode ? (
+              <button className="btn btn-primary" onClick={getCode}>
+                {t("telegram.getCode")}
+              </button>
+            ) : (
+              <div className="telegram-code-box">
+                <p>{t("telegram.sendCode")}</p>
+                <b className="telegram-code">{linkCode}</b>
+                <div className="card-actions">
+                  <button className="btn btn-primary" onClick={confirmLink}>
+                    {t("telegram.confirm")}
+                  </button>
+                  <button className="btn" onClick={() => setLinkCode("")}>
+                    {t("common.cancel")}
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+        {tgError && <p className="error-text">{tgError}</p>}
+        {tgSuccess && <p className="success-message">{tgSuccess}</p>}
+      </div>
     </div>
   );
 }

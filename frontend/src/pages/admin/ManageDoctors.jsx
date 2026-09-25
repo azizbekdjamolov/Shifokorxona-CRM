@@ -18,6 +18,7 @@ export default function ManageDoctors() {
     bio: "",
     experience_years: 0,
     price: 0,
+    photo: null,
   });
   const [error, setError] = useState("");
 
@@ -34,19 +35,22 @@ export default function ManageDoctors() {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
+  const handlePhoto = (e) => setForm({ ...form, photo: e.target.files[0] });
+
   const submit = async (e) => {
     e.preventDefault();
     setError("");
+    const data = new FormData();
+    data.append("user_id", form.user_id);
+    if (form.specialty) data.append("specialty", form.specialty);
+    data.append("bio", form.bio || "");
+    data.append("experience_years", form.experience_years || 0);
+    data.append("price", form.price || 0);
+    if (form.photo) data.append("photo", form.photo);
     try {
-      await createDoctor({
-        user_id: Number(form.user_id),
-        specialty: form.specialty ? Number(form.specialty) : null,
-        bio: form.bio,
-        experience_years: Number(form.experience_years),
-        price: Number(form.price),
-      });
+      await createDoctor(data);
       setShowForm(false);
-      setForm({ user_id: "", specialty: "", bio: "", experience_years: 0, price: 0 });
+      setForm({ user_id: "", specialty: "", bio: "", experience_years: 0, price: 0, photo: null });
       load();
     } catch (err) {
       const data = err.response?.data;
@@ -109,6 +113,10 @@ export default function ManageDoctors() {
               <input type="number" name="price" value={form.price} onChange={handleChange} />
             </label>
           </div>
+          <label>
+            Foto (ixtiyoriy)
+            <input type="file" accept="image/*" onChange={handlePhoto} />
+          </label>
           {error && <p className="error-text">{error}</p>}
           <button className="btn btn-primary">Saqlash</button>
         </form>

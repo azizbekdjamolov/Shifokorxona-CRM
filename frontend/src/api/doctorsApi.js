@@ -16,9 +16,17 @@ export const updateSchedule = (id, data) => axiosInstance.patch(`/doctors/me/sch
 
 export const deleteSchedule = (id) => axiosInstance.delete(`/doctors/me/schedule/${id}/`);
 
-export const createDoctor = (data) => axiosInstance.post("/doctors/create/", data);
+export const createDoctor = (data) => axiosInstance.post("/doctors/create/", data, {
+  headers: { "Content-Type": "multipart/form-data" },
+});
 
-export const updateDoctor = (id, data) => axiosInstance.patch(`/doctors/${id}/update/`, data);
+export const updateDoctor = (id, data) => axiosInstance.patch(`/doctors/${id}/update/`, data, {
+  headers: { "Content-Type": "multipart/form-data" },
+});
+
+export const updateDoctorMe = (data) => axiosInstance.patch("/doctors/me/", data, {
+  headers: { "Content-Type": "multipart/form-data" },
+});
 
 export const getAdminDoctors = (params) => axiosInstance.get("/doctors/admin/", { params });
 

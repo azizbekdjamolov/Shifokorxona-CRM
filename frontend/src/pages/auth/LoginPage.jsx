@@ -71,6 +71,11 @@ export default function LoginPage() {
           <button className="btn btn-primary btn-block" disabled={loading}>
             {loading ? t("common.loading") : t("auth.loginBtn")}
           </button>
+          <p className="auth-forgot">
+            <Link to="/forgot-password" className="link-btn">
+              {t("forgot.link")}
+            </Link>
+          </p>
           <p className="auth-switch">
             {t("auth.noAccount")}{" "}
             <Link to="/register" className="link-btn">

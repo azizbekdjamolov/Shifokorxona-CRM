@@ -6,6 +6,8 @@ from apps.users.services.otp_service import generate_otp, send_otp_email
 
 User = get_user_model()
 
+OTP_PASSWORD_RESET_PURPOSE = "password_reset"
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
@@ -120,3 +122,40 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        user = User.objects.filter(email__iexact=value.lower()).first()
+        if not user:
+            raise serializers.ValidationError("Foydalanuvchi topilmadi")
+        self.context["user"] = user
+        return value.lower()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.CharField(max_length=6)
+    password = serializers.CharField(write_only=True, min_length=8)
+    confirm_password = serializers.CharField(write_only=True, min_length=8)
+
+    def validate(self, attrs):
+        user = User.objects.filter(email__iexact=attrs["email"].lower()).first()
+        if not user:
+            raise serializers.ValidationError({"email": "Foydalanuvchi topilmadi"})
+        if attrs["password"] != attrs["confirm_password"]:
+            raise serializers.ValidationError({"confirm_password": "Parollar bir xil emas"})
+        from apps.users.services.otp_service import verify_otp
+
+        if not verify_otp(user, attrs["code"], purpose=OTP_PASSWORD_RESET_PURPOSE):
+            raise serializers.ValidationError({"code": "Noto'g'ri yoki muddati o'tgan kod"})
+        attrs["user"] = user
+        return attrs
+
+    def save(self, **kwargs):
+        user = self.validated_data["user"]
+        user.set_password(self.validated_data["password"])
+        user.save(update_fields=["password"])
+        return user

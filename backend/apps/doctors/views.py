@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
 
@@ -24,9 +25,10 @@ class DoctorListView(generics.ListAPIView):
     queryset = Doctor.objects.filter(is_active=True).select_related("user", "specialty")
     serializer_class = DoctorSerializer
     permission_classes = [AllowAny]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ["specialty"]
     search_fields = ["user__first_name", "user__last_name", "specialty__name"]
+    ordering_fields = ["average_rating", "price", "experience_years"]
 
 
 class DoctorDetailView(generics.RetrieveAPIView):

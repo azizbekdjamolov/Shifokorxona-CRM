@@ -5,6 +5,7 @@ from apps.reviews.models import Review
 
 class ReviewSerializer(serializers.ModelSerializer):
     patient_name = serializers.CharField(source="patient.get_full_name", read_only=True)
+    doctor_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Review
@@ -12,6 +13,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             "id",
             "booking",
             "doctor",
+            "doctor_name",
             "patient",
             "patient_name",
             "rating",
@@ -20,6 +22,9 @@ class ReviewSerializer(serializers.ModelSerializer):
             "created_at",
         ]
         read_only_fields = ["doctor", "patient", "status"]
+
+    def get_doctor_name(self, obj):
+        return f"Dr. {obj.doctor.user.get_full_name() or obj.doctor.user.email}"
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
