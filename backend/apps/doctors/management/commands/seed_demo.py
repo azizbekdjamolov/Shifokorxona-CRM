@@ -74,6 +74,11 @@ class Command(BaseCommand):
             "--fixed-password",
             help="Barcha demo hisoblarga shu parolni o'rnatish (demo uchun).",
         )
+        parser.add_argument(
+            "--reset-passwords",
+            action="store_true",
+            help="Demo hisoblar yetib (fixed-password taklif qilingan) parollarini yangilash.",
+        )
         parser.add_argument("--noinput", action="store_true")
 
     @transaction.atomic
@@ -136,4 +141,19 @@ class Command(BaseCommand):
         else:
             self.stdout.write(self.style.WARNING(
                 "Barcha demo hisoblar allaqachon mavjud."
+            ))
+
+        if options["reset_passwords"]:
+            pwd = _make_password(fixed=options["fixed_password"])
+            changed = 0
+            for idx, (first, last) in enumerate(DOCTOR_NAMES, start=1):
+                doc_email = f"doctor{idx}@shifokorxona.uz"
+                user = User.objects.filter(email__iexact=doc_email).first()
+                if user:
+                    user.set_password(pwd)
+                    user.save(update_fields=["password"])
+                    changed += 1
+            self.stdout.write(self.style.SUCCESS(
+                f"Doctor passwords reset ({pwd if options['fixed_password'] else 'random'}): "
+                f"{changed} shifokor uchun parol o'rnatildi."
             ))

@@ -24,10 +24,9 @@ class AIProviderError(Exception):
         self.status_code = status_code
 
 
-def _post_json(url, payload, headers=None, retries=3):
+def _post_json(url, payload, headers=None, retries=4):
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(url, data=data, method="POST", headers=headers or {})
-    last_error = None
     for attempt in range(1, retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=90) as resp:
@@ -35,11 +34,10 @@ def _post_json(url, payload, headers=None, retries=3):
         except urllib.error.HTTPError as err:
             detail = err.read().decode("utf-8", errors="replace")[:800]
             # Free tier "high demand" (503 UNAVAILABLE) vaqtincha — qayta urinamiz.
-            if err.code == 503 and "\"code\": 503" in detail and attempt < retries:
+            if err.code == 503 and attempt < retries:
                 import time
 
-                time.sleep(2 * attempt)
-                last_error = err
+                time.sleep(3 * attempt)
                 continue
             logger.error("AI HTTP %s: %s", err.code, detail)
             raise AIProviderError(
