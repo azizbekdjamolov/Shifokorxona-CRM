@@ -67,13 +67,22 @@ body {
   z-index: 50;
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 8px;
   padding: 12px 24px;
   background: rgba(255, 255, 255, 0.82);
   border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
 }
 
 .sidebar-toggle {
@@ -286,7 +295,8 @@ body {
   background: transparent;
   padding: 5px 10px;
   font-size: 12px;
-  text-transform: lowercase;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .lang-btn-active {
@@ -299,9 +309,10 @@ body {
 .app-body {
   display: flex;
   flex: 1;
+  align-items: stretch;
   width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .sidebar {
@@ -359,10 +370,9 @@ body {
 /* Main & footer */
 .app-main {
   flex: 1;
-  padding: 28px 28px 40px;
-  max-width: 1240px;
+  min-width: 0;
   width: 100%;
-  margin: 0 auto;
+  padding: 28px 28px 40px;
 }
 
 .app-footer {

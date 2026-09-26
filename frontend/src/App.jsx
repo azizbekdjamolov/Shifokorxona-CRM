@@ -19,16 +19,18 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <button
-          className="sidebar-toggle"
-          aria-label="Menu"
-          onClick={() => setSidebarOpen((v) => !v)}
-        >
-          ☰
-        </button>
-        <Link to="/" className="brand" onClick={closeSidebar}>
-          Shifokorxona CRM
-        </Link>
+        <div className="header-left">
+          <button
+            className="sidebar-toggle"
+            aria-label="Menu"
+            onClick={() => setSidebarOpen((v) => !v)}
+          >
+            ☰
+          </button>
+          <Link to="/" className="brand" onClick={closeSidebar}>
+            Shifokorxona CRM
+          </Link>
+        </div>
         <div className="header-actions">
           <ThemeToggle />
           <LanguageSwitcher />
