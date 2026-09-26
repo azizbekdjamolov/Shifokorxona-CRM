@@ -13,6 +13,7 @@
     "bookings": "Bookings",
     "reviews": "Reviews",
     "messages": "Messages",
+    "ai": "🧠 AI Assistant",
     "profile": "Profile",
     "logout": "Logout",
     "loggedOut": "Not signed in"
@@ -173,5 +174,29 @@
     "updatePassword": "Update password",
     "saved": "Data saved",
     "role": "Role"
+  },
+  "ai": {
+    "tagline": "AI assistant that analyzes your CRM data and images",
+    "greeting": "Hello! 😊",
+    "greetingText": "Ask me anything — I'll answer using your CRM data. You can also attach an image along with your question.",
+    "placeholder": "Type your question...",
+    "send": "Send",
+    "uploadImage": "Upload image",
+    "removeImage": "Remove image",
+    "dropHere": "Drop the image here",
+    "supported": "JPG, PNG, WEBP (up to 10 MB)",
+    "dragHint": "📎 You can also just drop an image here",
+    "analyzeImage": "🖼️ Analyze image",
+    "loadError": "Failed to load chat history",
+    "sendError": "Message not sent. Please try again.",
+    "badFormat": "Only JPG, PNG or WEBP images are allowed",
+    "tooLarge": "Image must not exceed 10 MB",
+    "quick": {
+      "medicines": "💊 My medicines",
+      "doctors": "👨‍⚕️ Doctors",
+      "queue": "📅 My queue",
+      "prescriptions": "📋 My prescriptions",
+      "clinic": "🏥 About clinic"
+    }
   }
 }

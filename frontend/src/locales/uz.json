@@ -13,6 +13,7 @@
     "bookings": "Bronlar",
     "reviews": "Sharhlar",
     "messages": "Xabarlar",
+    "ai": "🧠 AI-yordamchi",
     "profile": "Profil",
     "logout": "Chiqish",
     "loggedOut": "Kirilmagan"
@@ -173,5 +174,29 @@
     "updatePassword": "Parolni yangilash",
     "saved": "Ma'lumotlar saqlandi",
     "role": "Rol"
+  },
+  "ai": {
+    "tagline": "CRM ma'lumotlaringiz va suratlarni tahlil qiluvchi sun'iy yordamchi",
+    "greeting": "Salom! 😊",
+    "greetingText": "Menga istalgan savolni bering — CRM'dagi ma'lumotlaringiz bo'yicha javob beraman. Savol matni bilan birga surat ham yuborishingiz mumkin.",
+    "placeholder": "Menga savolingizni yozing...",
+    "send": "Yuborish",
+    "uploadImage": "Surat yuklash",
+    "removeImage": "Suratni olib tashlash",
+    "dropHere": "Suratni shu yerga tashlang",
+    "supported": "JPG, PNG, WEBP (10 MB gacha)",
+    "dragHint": "📎 Suratni shu yerga tashlab ham yuborishingiz mumkin",
+    "analyzeImage": "🖼️ Surat tahlili",
+    "loadError": "Suhbat tarixini yuklab bo'lmadi",
+    "sendError": "Xabar yuborilmadi. Qayta urinib ko'ring.",
+    "badFormat": "Faqat JPG, PNG yoki WEBP formatdagi surat yuklanadi",
+    "tooLarge": "Surat 10 MB dan katta bo'lmasligi kerak",
+    "quick": {
+      "medicines": "💊 Dorilarim",
+      "doctors": "👨‍⚕️ Shifokorlar",
+      "queue": "📅 Navbatim",
+      "prescriptions": "📋 Retseptlarim",
+      "clinic": "🏥 Klinika haqida"
+    }
   }
 }

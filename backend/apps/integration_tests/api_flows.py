@@ -652,3 +652,74 @@ class NeedUploadDoctorTest(TestCase):
             format="json",
         )
         self.assertEqual(res.status_code, 403)
+
+class AIAssistantTest(TestCase):
+    """Shifoxona AI chat endpoint - real Gemini call mock qilinadi."""
+
+    def setUp(self):
+        cache.clear()
+        self.patient = create_user("ai.patient@test.uz")
+        self.spec = Specialty.objects.create(name="Terapevt", slug="terapevt")
+        self.doctor_user = create_user("ai.doctor@test.uz", role="doctor", first="Nodir", last="Aliyev")
+        self.doctor = Doctor.objects.create(
+            user=self.doctor_user, specialty=self.spec,
+            bio="Terapevt", experience_years=7, price=90000,
+        )
+        self.client_ = self._auth(self.patient)
+        self._patch_ai()
+
+    def _auth(self, user):
+        from rest_framework_simplejwt.tokens import RefreshToken
+
+        token = RefreshToken.for_user(user)
+        c = APIClient()
+        c.credentials(HTTP_AUTHORIZATION=f"Bearer {token.access_token}")
+        return c
+
+    def _patch_ai(self):
+        from unittest.mock import patch
+
+        self._patcher = patch("apps.ai.views.generate_ai_response")
+        self._mock = self._patcher.start()
+        self._mock.return_value = "Sizning eng yaqin yozilish imkoniyatingiz: Dr. Nodir Aliyev (Terapevt)."
+        self.addCleanup(self._patcher.stop)
+
+    def test_ai_chat_returns_doctor_info_from_crm(self):
+        res = self.client_.post(
+            "/api/ai/chat/",
+            {"message": "Menga terapevt kerak", "language": "uz"},
+            format="json",
+        )
+        self.assertEqual(res.status_code, 200, res.data)
+        self.assertIn("Nodir Aliyev", res.data["reply"])
+        self.assertIsNotNone(res.data["user_message"]["id"])
+        self.assertIsNotNone(res.data["assistant_message"]["id"])
+        self._mock.assert_called_once()
+
+    def test_ai_chat_history(self):
+        self.client_.post("/api/ai/chat/", {"message": "Salom", "language": "uz"}, format="json")
+        res = self.client_.get("/api/ai/messages/")
+        self.assertEqual(res.status_code, 200, res.data)
+        roles = [m["role"] for m in res.data]
+        self.assertIn("user", roles)
+        self.assertIn("assistant", roles)
+
+    def test_ai_chat_image_upload(self):
+        from PIL import Image
+
+        buf = io.BytesIO()
+        Image.new("RGB", (8, 8), color=(70, 120, 190)).save(buf, format="JPEG")
+        img = SimpleUploadedFile("retsept.jpg", buf.getvalue(), content_type="image/jpeg")
+        res = self.client_.post(
+            "/api/ai/chat/",
+            {"message": "Bu retseptda nima bor?", "image": img, "language": "uz"},
+            format="multipart",
+        )
+        self.assertEqual(res.status_code, 200, res.data)
+        self.assertIsNotNone(res.data["user_message"]["image"])
+        self._mock.assert_called_once()
+
+    def test_ai_requires_auth(self):
+        anon = APIClient()
+        res = anon.get("/api/ai/messages/")
+        self.assertEqual(res.status_code, 401)

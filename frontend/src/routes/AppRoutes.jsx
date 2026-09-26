@@ -8,6 +8,7 @@ import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import ChatPage from "../pages/ChatPage";
+import AiChatPage from "../pages/AiChatPage";
 import UserDashboard from "../pages/user/UserDashboard";
 import MyQueue from "../pages/user/MyQueue";
 import MyPrescriptions from "../pages/user/MyPrescriptions";
@@ -75,6 +76,7 @@ export default function AppRoutes() {
 
       <Route element={<AuthenticatedGuard />}>
         <Route path="/messages" element={<ChatPage />} />
+        <Route path="/ai" element={<AiChatPage />} />
       </Route>
 
       <Route element={<PatientGuard />}>

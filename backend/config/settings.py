@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "apps.reviews",
     "apps.notifications",
     "apps.chats",
+    "apps.ai",
 ]
 
 MIDDLEWARE = [
@@ -222,6 +223,15 @@ BOOKING_HOLD_MINUTES = 5
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+
+# Shifoxona AI — provider-agnostik vision. Kalit faqat env orqali, hech qachon kodda emas.
+# AI_PROVIDER=gemini  -> native Gemini generateContent (AQ. Auth key uchun zarur)
+# AI_PROVIDER=openai  -> OpenAI-kompatibil /chat/completions (boshqa provayderlar uchun)
+AI_PROVIDER = os.getenv("AI_PROVIDER", "gemini")
+AI_API_KEY = os.getenv("AI_API_KEY", "")
+AI_MODEL = os.getenv("AI_MODEL", "gemini-flash-latest")
+AI_BASE_URL = os.getenv("AI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta")
+AI_MAX_HISTORY_TURNS = int(os.getenv("AI_MAX_HISTORY_TURNS", "20"))
 
 LOGGING = {
     "version": 1,

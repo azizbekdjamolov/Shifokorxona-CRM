@@ -7,7 +7,7 @@ import LanguageSwitcher from "./components/LanguageSwitcher";
 import AppRoutes from "./routes/AppRoutes";
 
 export default function App() {
-  const { user, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -16,10 +16,10 @@ export default function App() {
 
   const closeSidebar = () => setSidebarOpen(false);
 
-  return (
-    <div className="app">
-      <header className="app-header">
-        <div className="header-left">
+  const header = (
+    <header className="app-header">
+      <div className="header-left">
+        {user && !loading && (
           <button
             className="sidebar-toggle"
             aria-label="Menu"
@@ -27,110 +27,135 @@ export default function App() {
           >
             ☰
           </button>
-          <Link to="/" className="brand" onClick={closeSidebar}>
-            Shifokorxona CRM
-          </Link>
-        </div>
-        <div className="header-actions">
-          <ThemeToggle />
-          <LanguageSwitcher />
-          {user ? (
-            <div className="user-menu">
-              <span className="user-avatar">
-                {(user.full_name || user.email).charAt(0).toUpperCase()}
-              </span>
-              <span className="user-name">
-                {user.full_name || user.email}
-                <small className="user-role">{t(`roles.${user.role}`)}</small>
-              </span>
-              <button className="btn btn-outline btn-sm btn-logout" onClick={logout}>
-                {t("nav.logout")}
-              </button>
-            </div>
-          ) : (
+        )}
+        <Link to="/" className="brand" onClick={closeSidebar}>
+          Shifokorxona CRM
+        </Link>
+      </div>
+      <div className="header-actions">
+        <ThemeToggle />
+        <LanguageSwitcher />
+        {user && !loading ? (
+          <div className="user-menu">
+            <span className="user-avatar">
+              {(user.full_name || user.email).charAt(0).toUpperCase()}
+            </span>
+            <span className="user-name">
+              {user.full_name || user.email}
+              <small className="user-role">{t(`roles.${user.role}`)}</small>
+            </span>
+            <button className="btn btn-outline btn-sm btn-logout" onClick={logout}>
+              {t("nav.logout")}
+            </button>
+          </div>
+        ) : (
+          !loading && (
             <Link to="/login" className="btn btn-primary btn-sm btn-login">
               {t("auth.login")}
             </Link>
-          )}
+          )
+        )}
+      </div>
+    </header>
+  );
+
+  if (loading) {
+    return (
+      <div className="app">
+        {header}
+        <div className="app-loading">
+          <div className="spinner" />
+          <p>{t("common.loading")}</p>
         </div>
-      </header>
+      </div>
+    );
+  }
+
+  return (
+    <div className="app">
+      {header}
 
       <div className="app-body">
-        <aside className={`sidebar ${sidebarOpen ? "sidebar-open" : ""}`}>
-          <nav className="sidebar-nav" onClick={closeSidebar}>
-            <NavLink to="/" className={navLinkClass} end>
-              {t("nav.home")}
-            </NavLink>
-            <NavLink to="/doctors" className={navLinkClass}>
-              {t("nav.doctors")}
-            </NavLink>
-
-            {user && (
-              <NavLink to="/messages" className={navLinkClass}>
-                💬 {t("nav.messages")}
+        {user && (
+          <aside className={`sidebar ${sidebarOpen ? "sidebar-open" : ""}`}>
+            <nav className="sidebar-nav" onClick={closeSidebar}>
+              <NavLink to="/" className={navLinkClass} end>
+                {t("nav.home")}
               </NavLink>
-            )}
+              <NavLink to="/doctors" className={navLinkClass}>
+                {t("nav.doctors")}
+              </NavLink>
 
-            {user?.role === "patient" && (
-              <div className="sidebar-group">
-                <span className="sidebar-label">{t("roles.patient")}</span>
-                <NavLink to="/dashboard" className={navLinkClass}>
-                  {t("nav.dashboard")}
+              {user && (
+                <NavLink to="/messages" className={navLinkClass}>
+                  💬 {t("nav.messages")}
                 </NavLink>
-                <NavLink to="/my-queue" className={navLinkClass}>
-                  {t("nav.myQueue")}
-                </NavLink>
-                <NavLink to="/my-prescriptions" className={navLinkClass}>
-                  {t("nav.myPrescriptions")}
-                </NavLink>
-              </div>
-            )}
+              )}
+              <NavLink to="/ai" className={navLinkClass}>
+                🧠 {t("nav.ai")}
+              </NavLink>
 
-            {user?.role === "doctor" && (
-              <div className="sidebar-group">
-                <span className="sidebar-label">{t("roles.doctor")}</span>
-                <NavLink to="/doctor" className={navLinkClass}>
-                  {t("nav.doctorPanel")}
-                </NavLink>
-                <NavLink to="/doctor/today-queue" className={navLinkClass}>
-                  {t("nav.todayQueue")}
-                </NavLink>
-                <NavLink to="/doctor/schedule" className={navLinkClass}>
-                  {t("nav.schedule")}
-                </NavLink>
-              </div>
-            )}
+              {user?.role === "patient" && (
+                <div className="sidebar-group">
+                  <span className="sidebar-label">{t("roles.patient")}</span>
+                  <NavLink to="/dashboard" className={navLinkClass}>
+                    {t("nav.dashboard")}
+                  </NavLink>
+                  <NavLink to="/my-queue" className={navLinkClass}>
+                    {t("nav.myQueue")}
+                  </NavLink>
+                  <NavLink to="/my-prescriptions" className={navLinkClass}>
+                    {t("nav.myPrescriptions")}
+                  </NavLink>
+                </div>
+              )}
 
-            {user?.role === "admin" && (
-              <div className="sidebar-group">
-                <span className="sidebar-label">{t("roles.admin")}</span>
-                <NavLink to="/admin" className={navLinkClass}>
-                  {t("nav.adminPanel")}
-                </NavLink>
-                <NavLink to="/admin/users" className={navLinkClass}>
-                  {t("nav.users")}
-                </NavLink>
-                <NavLink to="/admin/doctors" className={navLinkClass}>
-                  {t("nav.doctors")}
-                </NavLink>
-                <NavLink to="/admin/bookings" className={navLinkClass}>
-                  {t("nav.bookings")}
-                </NavLink>
-                <NavLink to="/admin/reviews" className={navLinkClass}>
-                  📝 {t("nav.reviews")}
-                </NavLink>
-              </div>
-            )}
+              {user?.role === "doctor" && (
+                <div className="sidebar-group">
+                  <span className="sidebar-label">{t("roles.doctor")}</span>
+                  <NavLink to="/doctor" className={navLinkClass}>
+                    {t("nav.doctorPanel")}
+                  </NavLink>
+                  <NavLink to="/doctor/today-queue" className={navLinkClass}>
+                    {t("nav.todayQueue")}
+                  </NavLink>
+                  <NavLink to="/doctor/schedule" className={navLinkClass}>
+                    {t("nav.schedule")}
+                  </NavLink>
+                </div>
+              )}
 
-            {user && (
-              <div className="sidebar-group">
-                <NavLink to="/profile" className={navLinkClass}>
-                  {t("nav.profile")}
-                </NavLink>
-              </div>
-            )}
-          </nav>
-        </aside>
+              {user?.role === "admin" && (
+                <div className="sidebar-group">
+                  <span className="sidebar-label">{t("roles.admin")}</span>
+                  <NavLink to="/admin" className={navLinkClass}>
+                    {t("nav.adminPanel")}
+                  </NavLink>
+                  <NavLink to="/admin/users" className={navLinkClass}>
+                    {t("nav.users")}
+                  </NavLink>
+                  <NavLink to="/admin/doctors" className={navLinkClass}>
+                    {t("nav.doctors")}
+                  </NavLink>
+                  <NavLink to="/admin/bookings" className={navLinkClass}>
+                    {t("nav.bookings")}
+                  </NavLink>
+                  <NavLink to="/admin/reviews" className={navLinkClass}>
+                    📝 {t("nav.reviews")}
+                  </NavLink>
+                </div>
+              )}
+
+              {user && (
+                <div className="sidebar-group">
+                  <NavLink to="/profile" className={navLinkClass}>
+                    {t("nav.profile")}
+                  </NavLink>
+                </div>
+              )}
+            </nav>
+          </aside>
+        )}
 
         <main className="app-main">
           <AppRoutes />
