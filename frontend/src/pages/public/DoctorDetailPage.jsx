@@ -16,6 +16,7 @@ export default function DoctorDetailPage() {
   const [doctor, setDoctor] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [showBooking, setShowBooking] = useState(false);
+  const [toast, setToast] = useState("");
   const [chatMsg, setChatMsg] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -39,6 +40,12 @@ export default function DoctorDetailPage() {
     }
   };
 
+  const handleBooked = () => {
+    setShowBooking(false);
+    setToast(t("booking.success"));
+    window.setTimeout(() => setToast(""), 4000);
+  };
+
   if (loading) return <p>{t("common.loading")}</p>;
   if (!doctor) return <p className="empty-state">{t("common.empty")}</p>;
 
@@ -49,13 +56,14 @@ export default function DoctorDetailPage() {
       <Link to="/doctors" className="link-btn">
         ← {t("nav.doctors")}
       </Link>
+      {toast && <div className="toast toast-success">{toast}</div>}
 
       <div className="doctor-detail-head">
         <div className="doctor-card-photo doctor-detail-photo">
           {doctor.photo ? (
             <img src={doctor.photo} alt={fullName} />
           ) : (
-            <div className="doctor-avatar">🩺</div>
+            <div className="doctor-avatar">{fullName.charAt(0).toUpperCase()}</div>
           )}
         </div>
         <div className="doctor-detail-info">
@@ -63,7 +71,7 @@ export default function DoctorDetailPage() {
           <p className="doctor-specialty">{doctor.specialty_name}</p>
           <p>
             {t("doctor.experience")}: {doctor.experience_years} {t("doctor.years")} • {t("doctor.price")}:{" "}
-            {doctor.price} so'm
+            {Number(doctor.price || 0).toLocaleString("uz-UZ")} so'm
           </p>
           <p className="doctor-rating">⭐ {doctor.average_rating || "—"}</p>
           {doctor.bio && <p className="doctor-bio">{doctor.bio}</p>}
@@ -122,7 +130,13 @@ export default function DoctorDetailPage() {
         </section>
       </div>
 
-      {showBooking && <BookingModal doctor={doctor} onClose={() => setShowBooking(false)} />}
+      {showBooking && (
+        <BookingModal
+          doctor={doctor}
+          onClose={() => setShowBooking(false)}
+          onSuccess={handleBooked}
+        />
+      )}
     </div>
   );
 }

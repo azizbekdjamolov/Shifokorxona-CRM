@@ -85,6 +85,8 @@
   },
   "booking": {
     "title": "booking with",
+    "modalTitle": "Book an appointment",
+    "subtitle": "Choose a time to meet the doctor",
     "date": "Date",
     "time": "Time",
     "selectTime": "Select time",
@@ -92,7 +94,9 @@
     "needLogin": "Log in to book an appointment",
     "success": "Booking accepted!",
     "close": "Close",
-    "error": "Booking error"
+    "error": "Booking error",
+    "required": "Fill in this field",
+    "invalidPhone": "Invalid phone number"
   },
   "queue": {
     "title": "My queue",

@@ -85,6 +85,8 @@
   },
   "booking": {
     "title": "ga yozilish",
+    "modalTitle": "Qabulga yozilish",
+    "subtitle": "Shifokor bilan uchrashuv vaqtini tanlang",
     "date": "Sana",
     "time": "Vaqt",
     "selectTime": "Vaqtni tanlang",
@@ -92,7 +94,9 @@
     "needLogin": "Bron qilish uchun tizimga kiring",
     "success": "Broningiz qabul qilindi!",
     "close": "Yopish",
-    "error": "Bron qilishda xatolik"
+    "error": "Bron qilishda xatolik",
+    "required": "Maydonni to'ldiring",
+    "invalidPhone": "Telefon raqami noto'g'ri"
   },
   "queue": {
     "title": "Mening navbatim",

@@ -30,9 +30,13 @@ class BookingSerializer(serializers.ModelSerializer):
 
 
 class BookingCreateSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(required=False, allow_blank=True, max_length=150)
+    last_name = serializers.CharField(required=False, allow_blank=True, max_length=150)
+    phone = serializers.CharField(required=False, allow_blank=True, max_length=20)
+
     class Meta:
         model = Booking
-        fields = ["doctor", "date", "time"]
+        fields = ["doctor", "date", "time", "first_name", "last_name", "phone"]
 
     def validate(self, attrs):
         doctor = attrs["doctor"]
@@ -51,11 +55,30 @@ class BookingCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         from apps.bookings.services.booking_lock import create_booking_with_hold
 
+        user = self.context["request"].user
+        first_name = validated_data.pop("first_name", "")
+        last_name = validated_data.pop("last_name", "")
+        phone = validated_data.pop("phone", "")
+
+        if first_name or last_name or phone:
+            update_fields = []
+            if first_name and first_name != user.first_name:
+                user.first_name = first_name
+                update_fields.append("first_name")
+            if last_name and last_name != user.last_name:
+                user.last_name = last_name
+                update_fields.append("last_name")
+            if phone and phone != user.phone:
+                user.phone = phone
+                update_fields.append("phone")
+            if update_fields:
+                user.save(update_fields=update_fields)
+
         doctor = validated_data["doctor"]
         date = validated_data["date"]
         time = validated_data["time"]
         booking, error = create_booking_with_hold(
-            user=self.context["request"].user,
+            user=user,
             doctor=doctor,
             date=date,
             time=time,
