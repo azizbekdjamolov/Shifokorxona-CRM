@@ -209,7 +209,33 @@ export default function BookingModal({ doctor, onClose, onSuccess }) {
                 <label>
                   {t("auth.phone")}
                   <div className="phone-input">
-                    <span className="phone-prefix">🇺🇿 +998</span>
+                    <span className="phone-prefix">
+                      <svg
+                        viewBox="0 0 60 30"
+                        className="phone-flag"
+                        aria-hidden="true"
+                      >
+                        <rect width="60" height="30" fill="#1eb53a" />
+                        <rect width="60" height="22.5" fill="white" />
+                        <rect width="60" height="15" fill="#0099b5" />
+                        <rect y="15" width="60" height="1" fill="#ce1126" />
+                        <rect y="20.5" width="60" height="1" fill="#ce1126" />
+                        <circle cx="9" cy="7" r="4.5" fill="white" />
+                        <path d="M10.5 3.5 a4.5 4.5 0 0 1 0 7" fill="#0099b5" />
+                        <circle cx="25" cy="3.5" r="1.1" fill="white" />
+                        <circle cx="32" cy="3.5" r="1.1" fill="white" />
+                        <circle cx="39" cy="3.5" r="1.1" fill="white" />
+                        <circle cx="28.5" cy="7.5" r="1.1" fill="white" />
+                        <circle cx="35.5" cy="7.5" r="1.1" fill="white" />
+                        <circle cx="42.5" cy="7.5" r="1.1" fill="white" />
+                        <circle cx="26" cy="11.5" r="1.1" fill="white" />
+                        <circle cx="33" cy="11.5" r="1.1" fill="white" />
+                        <circle cx="40" cy="11.5" r="1.1" fill="white" />
+                        <circle cx="37.5" cy="15" r="1.1" fill="white" />
+                        <circle cx="44.5" cy="15" r="1.1" fill="white" />
+                      </svg>
+                      +998
+                    </span>
                     <input
                       type="tel"
                       inputMode="tel"
