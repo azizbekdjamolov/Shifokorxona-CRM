@@ -1009,21 +1009,23 @@ body {
 .phone-prefix {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  gap: 6px;
+  min-width: 74px;
   padding: 10px 12px;
   font-size: 14px;
   font-weight: 600;
-  color: var(--text);
-  background: var(--surface-2, #f1f5f9);
-  border-right: 1px solid var(--border, #cbd5e1);
+  color: #fff;
+  background: var(--primary, #818cf8);
+  border-right: 1px solid rgba(255, 255, 255, 0.25);
   white-space: nowrap;
 }
 
 .phone-flag {
-  width: 20px;
-  height: 13px;
-  border-radius: 2px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  width: 24px;
+  height: 16px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
   flex-shrink: 0;
 }
 
