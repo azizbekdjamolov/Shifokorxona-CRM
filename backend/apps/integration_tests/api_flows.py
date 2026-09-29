@@ -444,6 +444,69 @@ class PrescriptionFlowTest(BaseFlowTest):
         self.assertEqual(len(res.data["results"]), 1)
 
 
+class BookingReminderFlowTest(BaseFlowTest):
+    def test_reminder_sent_5_minutes_before(self):
+        from unittest.mock import patch
+
+        from apps.bookings.services.reminder_service import send_due_reminders
+
+        slot_dt = timezone.localtime() + timezone.timedelta(minutes=5)
+        booking = Booking.objects.create(
+            user=self.patient,
+            doctor=self.doctor,
+            date=slot_dt.date(),
+            time=slot_dt.time(),
+            status=Booking.Status.CONFIRMED,
+        )
+
+        with patch(
+            "apps.bookings.services.reminder_service.send_transactional_email",
+            return_value=True,
+        ) as mock_send:
+            sent = send_due_reminders()
+
+        self.assertEqual(sent, 1)
+        self.assertEqual(mock_send.call_count, 1)
+        args = mock_send.call_args.kwargs
+        self.assertEqual(args["to_email"], "patient@test.uz")
+        self.assertIn("5 daqiqa", args["subject"])
+        self.assertIn("Kardiolog", args["html_body"])
+
+        booking.refresh_from_db()
+        self.assertIsNotNone(booking.reminder_sent_at)
+
+        # Ikkinchi marta yuborilmaydi
+        with patch(
+            "apps.bookings.services.reminder_service.send_transactional_email",
+            return_value=True,
+        ) as mock_send2:
+            sent2 = send_due_reminders()
+        self.assertEqual(sent2, 0)
+        self.assertEqual(mock_send2.call_count, 0)
+
+    def test_reminder_not_sent_too_early_or_late(self):
+        from unittest.mock import patch
+
+        from apps.bookings.services.reminder_service import send_due_reminders
+
+        too_early_dt = timezone.localtime() + timezone.timedelta(minutes=60)
+        Booking.objects.create(
+            user=self.patient,
+            doctor=self.doctor,
+            date=too_early_dt.date(),
+            time=too_early_dt.time(),
+            status=Booking.Status.CONFIRMED,
+        )
+
+        with patch(
+            "apps.bookings.services.reminder_service.send_transactional_email",
+            return_value=True,
+        ) as mock_send:
+            sent = send_due_reminders()
+        self.assertEqual(sent, 0)
+        self.assertEqual(mock_send.call_count, 0)
+
+
 class ChatFlowTest(BaseFlowTest):
     def test_full_chat_flow(self):
         # Bemor suhbat ochadi

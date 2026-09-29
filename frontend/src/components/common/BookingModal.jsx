@@ -18,23 +18,18 @@ const nextDays = () => {
 
 const normalizePhone = (value) => (value || "").replace(/\D/g, "");
 
-const isValidPhone = (value) => {
+const getPhoneDigits = (value) => {
   const digits = normalizePhone(value);
-  return /^998\d{9}$/.test(digits);
+  return digits.startsWith("998") ? digits.slice(3) : digits;
 };
 
-const formatPhone = (value) => {
-  const digits = normalizePhone(value).slice(0, 12);
-  if (!digits.startsWith("998")) return digits;
-  const rest = digits.slice(3);
-  const parts = [
-    "+",
-    digits.slice(0, 3),
-    rest.slice(0, 2),
-    rest.slice(2, 5),
-    rest.slice(5, 7),
-    rest.slice(7, 9),
-  ].filter(Boolean);
+const isValidPhone = (phoneDigits) => /^\d{9}$/.test(phoneDigits);
+
+const formatDigits = (phoneDigits) => {
+  const d = (phoneDigits || "").slice(0, 9);
+  const parts = [d.slice(0, 2), d.slice(2, 5), d.slice(5, 7), d.slice(7, 9)].filter(
+    Boolean
+  );
   return parts.join(" ");
 };
 
@@ -45,7 +40,7 @@ export default function BookingModal({ doctor, onClose, onSuccess }) {
 
   const [firstName, setFirstName] = useState(user?.first_name || "");
   const [lastName, setLastName] = useState(user?.last_name || "");
-  const [phone, setPhone] = useState(user?.phone || "");
+  const [phoneDigits, setPhoneDigits] = useState(getPhoneDigits(user?.phone || ""));
   const [date, setDate] = useState(days[0]);
   const [time, setTime] = useState("");
   const [errors, setErrors] = useState({});
@@ -83,8 +78,8 @@ export default function BookingModal({ doctor, onClose, onSuccess }) {
     const errs = {};
     if (!firstName.trim()) errs.firstName = t("booking.required");
     if (!lastName.trim()) errs.lastName = t("booking.required");
-    if (!phone.trim()) errs.phone = t("booking.required");
-    else if (!isValidPhone(phone)) errs.phone = t("booking.invalidPhone");
+    if (!phoneDigits) errs.phone = t("booking.required");
+    else if (!isValidPhone(phoneDigits)) errs.phone = t("booking.invalidPhone");
     if (!date) errs.date = t("booking.required");
     if (!time) errs.time = t("booking.required");
     return errs;
@@ -97,6 +92,7 @@ export default function BookingModal({ doctor, onClose, onSuccess }) {
     setLoading(true);
     setError("");
     try {
+      const phone = `+998${phoneDigits}`;
       await createBooking({
         doctor: doctor.id,
         date,
@@ -196,13 +192,18 @@ export default function BookingModal({ doctor, onClose, onSuccess }) {
                 </div>
                 <label>
                   {t("auth.phone")}
-                  <input
-                    type="tel"
-                    inputMode="tel"
-                    placeholder="+998 90 123 45 67"
-                    value={phone}
-                    onChange={(e) => setPhone(formatPhone(e.target.value))}
-                  />
+                  <div className="phone-input">
+                    <span className="phone-prefix">🇺🇿 +998</span>
+                    <input
+                      type="tel"
+                      inputMode="tel"
+                      placeholder="90 123 45 67"
+                      value={formatDigits(phoneDigits)}
+                      onChange={(e) =>
+                        setPhoneDigits(normalizePhone(e.target.value).slice(0, 9))
+                      }
+                    />
+                  </div>
                   {errors.phone && <span className="field-error">{errors.phone}</span>}
                 </label>
                 <div className="form-row">

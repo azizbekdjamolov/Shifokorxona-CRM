@@ -70,6 +70,64 @@ def build_otp_html(code: str, minutes: int, cta_url: str = "") -> str:
 </html>"""
 
 
+def build_booking_reminder_html(
+    patient_name: str,
+    doctor_name: str,
+    specialty_name: str,
+    date_str: str,
+    time_str: str,
+    clinic: str = "",
+) -> str:
+    """Navbatga 5 daqiqa qolganida yuboriladigan eslatma emaili."""
+    specialty = f" — {specialty_name}" if specialty_name else ""
+    clinic_line = f"<p style=\"margin:0 0 6px;font-size:13px;color:#64748b;line-height:1.5;\">Manzil: <strong>{clinic}</strong></p>" if clinic else ""
+    return f"""<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navbat eslatmasi</title>
+  </head>
+  <body style="margin:0;padding:0;background:#f4f6fb;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6fb;padding:24px 0;">
+      <tr><td align="center">
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(15,23,42,.08);">
+          <tr>
+            <td style="background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 55%,#d946ef 100%);padding:28px 30px;text-align:center;">
+              <span style="font-size:24px;font-weight:700;letter-spacing:.5px;color:#ffffff;">{SENDER_NAME}</span>
+              <div style="font-size:13px;color:rgba(255,255,255,.85);margin-top:4px;">Navbat eslatmasi</div>
+            </td>
+          </tr>
+          <tr><td style="padding:32px 34px;">
+            <h1 style="margin:0 0 16px;font-size:19px;color:#0f172a;font-weight:600;">⏰ Navbatingizga 5 daqiqa qoldi!</h1>
+            <p style="margin:0 0 22px;font-size:14px;line-height:1.55;color:#334155;">
+              Xurmatli <strong>{patient_name}</strong>, quyidagi shifokor qabuliga yetib kelishingizni eslatamiz.
+            </p>
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 24px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;width:100%;">
+              <tr><td style="padding:16px 26px;">
+                <p style="margin:0 0 4px;font-size:16px;font-weight:700;color:#0f172a;">{doctor_name}</p>
+                <p style="margin:0 0 10px;font-size:13px;color:#64748b;">{specialty}</p>
+                <p style="margin:0 0 4px;font-size:14px;color:#4338ca;font-weight:600;">📅 {date_str} • 🕐 {time_str}</p>
+                {clinic_line}
+              </td></tr>
+            </table>
+            <p style="margin:0 0 6px;font-size:13px;color:#64748b;line-height:1.5;">
+              Iltimos, o'z vaqtida yetib keling. Navbatingizni o'zgartirish yoki bekor qilish
+              imkoniyatidan istalgan vaqtda platformada foydalanishingiz mumkin.
+            </p>
+          </td></tr>
+          <tr>
+            <td style="background:#f8fafc;padding:18px 30px;text-align:center;">
+              <span style="font-size:12px;color:#94a3b8;">© Shifokorxona CRM — Bu xabar avtomatik yuborildi, javob yozmang.</span>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>"""
+
+
 def send_transactional_email(to_email: str, subject: str, html_body: str) -> bool:
     """Brevo V3 orqali transactional HTML email yuboradi. Xatolikda False qaytaradi."""
     if not _brevo_available():
