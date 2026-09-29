@@ -19,3 +19,5 @@ export const confirmPasswordReset = (data) => axiosInstance.post("/users/passwor
 export const getAdminUsers = (params) => axiosInstance.get("/users/admin/", { params });
 
 export const updateAdminUser = (id, data) => axiosInstance.patch(`/users/admin/${id}/`, data);
+
+export const getPatients = (params) => axiosInstance.get("/users/patients/", { params });

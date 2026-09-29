@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { createPrescription } from "../../api/prescriptionsApi";
 import { getDoctorTodayQueue } from "../../api/bookingsApi";
+import { getPatients } from "../../api/authApi";
 
 export default function AddPrescription() {
   const [searchParams] = useSearchParams();
   const [bookings, setBookings] = useState([]);
+  const [patients, setPatients] = useState([]);
+  const [patientId, setPatientId] = useState("");
+  const [search, setSearch] = useState("");
   const [bookingId, setBookingId] = useState(searchParams.get("booking") || "");
   const [form, setForm] = useState({
     medicine_name: "",
@@ -27,7 +31,20 @@ export default function AddPrescription() {
         setBookingId(String(completed[0].id));
       }
     });
+    getPatients({ page_size: 100 }).then((res) => {
+      setPatients(res.data.results || res.data);
+    });
   }, []);
+
+  const filteredPatients = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return patients;
+    return patients.filter((p) =>
+      [p.full_name, p.first_name, p.last_name, p.email, p.phone]
+        .filter(Boolean)
+        .some((v) => String(v).toLowerCase().includes(q))
+    );
+  }, [patients, search]);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -37,11 +54,16 @@ export default function AddPrescription() {
 
   const submit = async (e) => {
     e.preventDefault();
+    if (!patientId) {
+      setError("Bemor tanlang");
+      return;
+    }
     setLoading(true);
     setError("");
     setSuccess(false);
     const data = new FormData();
-    data.append("booking", bookingId);
+    if (bookingId) data.append("booking", bookingId);
+    data.append("patient", patientId);
     data.append("medicine_name", form.medicine_name);
     data.append("instruction", form.instruction);
     data.append("times_per_day", form.times_per_day);
@@ -51,21 +73,69 @@ export default function AddPrescription() {
       await createPrescription(data);
       setSuccess(true);
       setForm({ medicine_name: "", instruction: "", times_per_day: 1, days: 1, image: null });
+      setPatientId("");
+      setSearch("");
     } catch (err) {
-      setError(err.response?.data?.booking?.[0] || "Retsept yozishda xatolik");
+      setError(
+        err.response?.data?.patient?.[0] ||
+          err.response?.data?.booking?.[0] ||
+          "Retsept yozishda xatolik"
+      );
     } finally {
       setLoading(false);
     }
   };
+
+  const selectedPatient = patients.find((p) => String(p.id) === String(patientId));
 
   return (
     <div className="form-page">
       <h1>Retsept yozish</h1>
       <form className="auth-form" onSubmit={submit}>
         <label>
-          Bemor (yakunlangan bron)
-          <select value={bookingId} onChange={(e) => setBookingId(e.target.value)} required>
-            <option value="">Bemorni tanlang</option>
+          Bemor (barcha ro'yxatdan o'tganlar)
+          <input
+            type="search"
+            placeholder="Ism, familiya, email yoki telefon bo'yicha qidiring..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPatientId("");
+            }}
+            autoComplete="off"
+          />
+          {selectedPatient ? (
+            <span className="patient-picked">
+              ✅ {selectedPatient.full_name} — {selectedPatient.email || selectedPatient.phone}
+            </span>
+          ) : (
+            <div className="patient-search-list">
+              {filteredPatients.length === 0 && (
+                <p className="form-hint">Hech qanday bemor topilmadi</p>
+              )}
+              {filteredPatients.map((p) => (
+                <button
+                  type="button"
+                  key={p.id}
+                  className="patient-search-item"
+                  onClick={() => {
+                    setPatientId(String(p.id));
+                    setSearch(p.full_name);
+                  }}
+                >
+                  <span className="patient-item-name">{p.full_name}</span>
+                  <span className="patient-item-meta">
+                    {p.email} {p.phone ? `• ${p.phone}` : ""}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </label>
+        <label>
+          Bron (ixtiyoriy — yakunlanganlar)
+          <select value={bookingId} onChange={(e) => setBookingId(e.target.value)}>
+            <option value="">Hech qanday bron</option>
             {bookings.map((b) => (
               <option key={b.id} value={b.id}>
                 {b.patient_name} — {b.time}

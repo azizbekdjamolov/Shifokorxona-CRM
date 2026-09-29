@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
-from apps.users.permissions import IsSelfOrAdmin, IsAdminUser
+from apps.users.permissions import IsSelfOrAdmin, IsAdminUser, IsDoctorUser
 from apps.users.serializers import (
     RegisterSerializer,
     VerifyOtpSerializer,
@@ -115,6 +115,18 @@ class AdminUserListView(generics.ListAPIView):
         if role:
             queryset = queryset.filter(role=role)
         return queryset
+
+
+class PatientUserListView(generics.ListAPIView):
+    """Doctorlar uchun barcha ro'yxatdan o'tgan userlar (bemor tanlash uchun)."""
+
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsDoctorUser]
+    search_fields = ["first_name", "last_name", "email", "phone", "username"]
+    filterset_fields = ["role"]
+
+    def get_queryset(self):
+        return User.objects.filter(is_active=True).order_by("-date_joined")
 
 
 class AdminUserUpdateView(generics.RetrieveUpdateAPIView):

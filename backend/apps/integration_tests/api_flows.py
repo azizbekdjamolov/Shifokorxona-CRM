@@ -361,6 +361,7 @@ class PrescriptionFlowTest(BaseFlowTest):
             "/api/prescriptions/create/",
             {
                 "booking": booking.id,
+                "patient": self.patient.id,
                 "medicine_name": "Paratsetamol",
                 "instruction": "Kuniga 3 mahal",
                 "times_per_day": 3,
@@ -371,12 +372,30 @@ class PrescriptionFlowTest(BaseFlowTest):
         self.assertEqual(res.status_code, 201, res.data)
         self.assertEqual(Prescription.objects.count(), 1)
 
+    def test_prescription_without_booking_direct_patient(self):
+        res = self.doctor_client.post(
+            "/api/prescriptions/create/",
+            {
+                "patient": self.patient.id,
+                "medicine_name": "Vitamin D3",
+                "instruction": "Kuniga 1 mahal",
+                "times_per_day": 1,
+                "days": 30,
+            },
+            format="json",
+        )
+        self.assertEqual(res.status_code, 201, res.data)
+        rx = Prescription.objects.get()
+        self.assertIsNone(rx.booking)
+        self.assertEqual(rx.patient_id, self.patient.id)
+
     def test_patient_prescriptions_list(self):
         booking = self._make_completed_booking()
         self.doctor_client.post(
             "/api/prescriptions/create/",
             {
                 "booking": booking.id,
+                "patient": self.patient.id,
                 "medicine_name": "Ibuprofen",
                 "instruction": "Ovqatdan keyin",
                 "times_per_day": 2,
@@ -389,12 +408,30 @@ class PrescriptionFlowTest(BaseFlowTest):
         self.assertEqual(len(res.data["results"]), 1)
         self.assertEqual(res.data["results"][0]["doctor_name"], "Dr. Aziz Karimov")
 
+    def test_doctor_can_list_and_search_patients(self):
+        res = self.doctor_client.get("/api/users/patients/")
+        self.assertEqual(res.status_code, 200, res.data)
+        all_emails = [u["email"] for u in res.data["results"]]
+        self.assertIn(self.patient.email, all_emails)
+        self.assertIn(self.doctor.user.email, all_emails)
+
+        res = self.doctor_client.get("/api/users/patients/?search=Test")
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(all(
+            "test" in u["email"].lower() or "Test" in (u["full_name"] or "")
+            for u in res.data["results"]
+        ))
+
+        res = self.patient_client.get("/api/users/patients/")
+        self.assertEqual(res.status_code, 403)
+
     def test_doctor_prescription_history(self):
         booking = self._make_completed_booking()
         self.doctor_client.post(
             "/api/prescriptions/create/",
             {
                 "booking": booking.id,
+                "patient": self.patient.id,
                 "medicine_name": "Amoksitsillin",
                 "instruction": "7 kun",
                 "times_per_day": 3,

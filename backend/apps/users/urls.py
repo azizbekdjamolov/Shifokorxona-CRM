@@ -7,6 +7,7 @@ from apps.users.views import (
     ResendOtpView,
     AdminUserListView,
     AdminUserUpdateView,
+    PatientUserListView,
     PasswordResetRequestView,
     PasswordResetConfirmView,
 )
@@ -20,4 +21,5 @@ urlpatterns = [
     path("me/", MeView.as_view(), name="me"),
     path("admin/", AdminUserListView.as_view(), name="admin_users"),
     path("admin/<int:pk>/", AdminUserUpdateView.as_view(), name="admin_user_update"),
+    path("patients/", PatientUserListView.as_view(), name="patient_users"),
 ]

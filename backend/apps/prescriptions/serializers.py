@@ -1,6 +1,10 @@
+from django.contrib.auth import get_user_model
+
 from rest_framework import serializers
 
 from apps.prescriptions.models import Prescription
+
+User = get_user_model()
 
 
 class PrescriptionSerializer(serializers.ModelSerializer):
@@ -33,24 +37,28 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
 
 class PrescriptionCreateSerializer(serializers.ModelSerializer):
+    patient = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
     class Meta:
         model = Prescription
         fields = [
             "booking",
+            "patient",
             "medicine_name",
             "instruction",
             "times_per_day",
             "days",
             "image",
         ]
+        extra_kwargs = {"booking": {"required": False, "allow_null": True}}
 
     def validate(self, attrs):
         doctor = self.context["request"].user.doctor_profile
-        booking = attrs["booking"]
-        if booking.doctor_id != doctor.id:
-            raise serializers.ValidationError({"booking": "Bu bron boshqa shifokorga tegishli"})
-        if booking.status != "completed":
-            raise serializers.ValidationError({"booking": "Retsept faqat yakunlangan bron uchun yoziladi"})
+        booking = attrs.get("booking")
+        if booking is not None:
+            if booking.doctor_id != doctor.id:
+                raise serializers.ValidationError({"booking": "Bu bron boshqa shifokorga tegishli"})
+            if booking.status != "completed":
+                raise serializers.ValidationError({"booking": "Retsept faqat yakunlangan bron uchun yoziladi"})
         attrs["doctor"] = doctor
-        attrs["patient"] = booking.user
         return attrs
