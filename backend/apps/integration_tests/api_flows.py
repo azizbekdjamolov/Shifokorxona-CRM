@@ -204,6 +204,27 @@ class DoctorFlowTest(BaseFlowTest):
         self.assertTrue(self.doctor.photo.name.startswith("doctors/"))
         self.assertTrue(self.doctor.photo.name.endswith(".jpg"))
 
+    def test_availability_returns_booked_slots(self):
+        from apps.bookings.models import Booking
+
+        today = timezone.localdate()
+        Booking.objects.create(
+            user=self.patient,
+            doctor=self.doctor,
+            date=today,
+            time="10:00",
+            status=Booking.Status.CONFIRMED,
+        )
+        res = self.patient_client.get(
+            f"/api/doctors/{self.doctor.id}/availability/?date={today.isoformat()}"
+        )
+        self.assertEqual(res.status_code, 200, res.data)
+        self.assertEqual(res.data["date"], today.isoformat())
+        self.assertIn("10:00", res.data["booked_times"])
+
+        res = self.patient_client.get(f"/api/doctors/{self.doctor.id}/availability/?date=bad-date")
+        self.assertEqual(res.status_code, 400)
+
 
 class BookingFlowTest(BaseFlowTest):
     def test_create_hold_and_slot_lock(self):

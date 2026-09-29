@@ -4,6 +4,9 @@ export const getDoctors = (params) => axiosInstance.get("/doctors/", { params })
 
 export const getDoctor = (id) => axiosInstance.get(`/doctors/${id}/`);
 
+export const getDoctorAvailability = (id, params) =>
+  axiosInstance.get(`/doctors/${id}/availability/`, { params });
+
 export const getSpecialties = () => axiosInstance.get("/doctors/specialties/");
 
 export const getDoctorMe = () => axiosInstance.get("/doctors/me/");

@@ -4,6 +4,11 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { createBooking } from "../../api/bookingsApi";
+import { getDoctorAvailability } from "../../api/doctorsApi";
+
+const HOURS_24 = Array.from({ length: 24 }, (_, h) =>
+  `${String(h).padStart(2, "0")}:00`
+);
 
 const nextDays = () => {
   const days = [];
@@ -61,11 +66,22 @@ export default function BookingModal({ doctor, onClose, onSuccess }) {
     };
   }, [onClose]);
 
-  const schedule = doctor.schedule || [];
-  const todaySlots = schedule.filter((s) => {
-    const weekDay = new Date(date).getDay();
-    return s.weekday === weekDay;
-  });
+  const [bookedTimes, setBookedTimes] = useState([]);
+
+  useEffect(() => {
+    if (!doctor?.id || !date) return;
+    setBookedTimes([]);
+    setTime("");
+    getDoctorAvailability(doctor.id, { date })
+      .then((res) => {
+        setBookedTimes(res.data.booked_times || []);
+      })
+      .catch(() => setBookedTimes([]));
+  }, [doctor?.id, date]);
+
+  const timeSlots = HOURS_24;
+
+  const isSlotBooked = (slot) => bookedTimes.includes(slot);
 
   const selectedDate = new Date(date);
   const weekdayLabel = selectedDate.toLocaleDateString(user?.role ? "uz-UZ" : "uz-UZ", {
@@ -224,14 +240,15 @@ export default function BookingModal({ doctor, onClose, onSuccess }) {
                     {t("booking.time")}
                     <select value={time} onChange={(e) => setTime(e.target.value)}>
                       <option value="">{t("booking.selectTime")}</option>
-                      {todaySlots.map((slot) => {
-                        const start = slot.start_time.slice(0, 5);
-                        return (
-                          <option key={slot.id} value={start}>
-                            {start}
-                          </option>
-                        );
-                      })}
+                      {timeSlots.map((start) => (
+                        <option
+                          key={start}
+                          value={start}
+                          disabled={isSlotBooked(start)}
+                        >
+                          {start} {isSlotBooked(start) ? "• band" : ""}
+                        </option>
+                      ))}
                     </select>
                     {errors.time && <span className="field-error">{errors.time}</span>}
                   </label>
