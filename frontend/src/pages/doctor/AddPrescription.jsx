@@ -1,16 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { createPrescription } from "../../api/prescriptionsApi";
-import { getDoctorTodayQueue } from "../../api/bookingsApi";
 import { getPatients } from "../../api/authApi";
 
 export default function AddPrescription() {
   const [searchParams] = useSearchParams();
-  const [bookings, setBookings] = useState([]);
   const [patients, setPatients] = useState([]);
-  const [patientId, setPatientId] = useState("");
+  const [patientId, setPatientId] = useState(searchParams.get("patient") || "");
   const [search, setSearch] = useState("");
-  const [bookingId, setBookingId] = useState(searchParams.get("booking") || "");
   const [form, setForm] = useState({
     medicine_name: "",
     instruction: "",
@@ -23,14 +20,6 @@ export default function AddPrescription() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getDoctorTodayQueue().then((res) => {
-      const list = res.data.results || res.data;
-      const completed = list.filter((b) => b.status === "completed");
-      setBookings(completed);
-      if (!bookingId && completed.length > 0) {
-        setBookingId(String(completed[0].id));
-      }
-    });
     getPatients({ page_size: 100 }).then((res) => {
       setPatients(res.data.results || res.data);
     });
@@ -62,7 +51,6 @@ export default function AddPrescription() {
     setError("");
     setSuccess(false);
     const data = new FormData();
-    if (bookingId) data.append("booking", bookingId);
     data.append("patient", patientId);
     data.append("medicine_name", form.medicine_name);
     data.append("instruction", form.instruction);
@@ -131,17 +119,6 @@ export default function AddPrescription() {
               ))}
             </div>
           )}
-        </label>
-        <label>
-          Bron (ixtiyoriy — yakunlanganlar)
-          <select value={bookingId} onChange={(e) => setBookingId(e.target.value)}>
-            <option value="">Hech qanday bron</option>
-            {bookings.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.patient_name} — {b.time}
-              </option>
-            ))}
-          </select>
         </label>
         <label>
           Dori nomi
