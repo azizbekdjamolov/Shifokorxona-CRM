@@ -124,9 +124,9 @@ class Command(BaseCommand):
                 DoctorSchedule.objects.get_or_create(
                     doctor=user.doctor_profile, weekday=weekday,
                     defaults={
-                        "start_time": "09:00",
-                        "end_time": "17:00",
-                        "is_working": weekday < 5,
+                        "start_time": "07:00",
+                        "end_time": "21:00",
+                        "is_working": True,
                     },
                 )
             credentials.append(f"DOCTOR{idx} -> {doc_email}  password: {pwd}")

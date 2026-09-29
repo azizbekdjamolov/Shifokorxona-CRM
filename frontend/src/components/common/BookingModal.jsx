@@ -6,9 +6,26 @@ import { useAuth } from "../../context/AuthContext";
 import { createBooking } from "../../api/bookingsApi";
 import { getDoctorAvailability } from "../../api/doctorsApi";
 
-const HOURS_24 = Array.from({ length: 24 }, (_, h) =>
-  `${String(h).padStart(2, "0")}:00`
-);
+const DEFAULT_START = 7;
+const DEFAULT_END = 21;
+
+const rangeHours = (start, end) =>
+  Array.from({ length: Math.max(0, end - start) }, (_, h) =>
+    `${String(start + h).padStart(2, "0")}:00`
+  );
+
+const buildTimeSlots = (doctor, date) => {
+  const schedule = doctor?.schedule || [];
+  if (schedule.length === 0) {
+    return rangeHours(DEFAULT_START, DEFAULT_END);
+  }
+  const pyWeekday = (new Date(date).getDay() + 6) % 7;
+  const day = schedule.find((s) => s.weekday === pyWeekday);
+  if (!day || !day.is_working) return [];
+  const start = parseInt(day.start_time.slice(0, 2), 10);
+  const end = parseInt(day.end_time.slice(0, 2), 10);
+  return rangeHours(start, end);
+};
 
 const nextDays = () => {
   const days = [];
@@ -79,7 +96,7 @@ export default function BookingModal({ doctor, onClose, onSuccess }) {
       .catch(() => setBookedTimes([]));
   }, [doctor?.id, date]);
 
-  const timeSlots = HOURS_24;
+  const timeSlots = buildTimeSlots(doctor, date);
 
   const isSlotBooked = (slot) => bookedTimes.includes(slot);
 

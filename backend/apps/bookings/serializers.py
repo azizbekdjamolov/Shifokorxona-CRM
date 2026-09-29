@@ -48,6 +48,29 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         if date < timezone.localdate():
             raise serializers.ValidationError({"date": "O'tgan sanaga bron qilib bo'lmaydi"})
 
+        # Shifokor ish jadvaliga mos kelishini tekshiramiz.
+        # Jadval umuman bo'lmasa — default 07:00-21:00.
+        # Jadval bo'lsa — faqat ish soatlari; dam olish kuniga bron qilib bo'lmaydi.
+        from datetime import time as time_type
+
+        schedules = list(doctor.schedule.filter(weekday=date.weekday()))
+        has_schedule = doctor.schedule.exists()
+        if has_schedule:
+            working = [s for s in schedules if s.is_working]
+            if not working:
+                raise serializers.ValidationError(
+                    {"time": "Shifokor bu kuni ishlamaydi"}
+                )
+            slot = working[0]
+            if not (slot.start_time <= time < slot.end_time):
+                raise serializers.ValidationError(
+                    {"time": "Shifokor ish vaqtidan tashqari vaqt tanlangesiz"}
+                )
+        elif not (time_type(7, 0) <= time < time_type(21, 0)):
+            raise serializers.ValidationError(
+                {"time": "Qabul 07:00 dan 21:00 gacha"}
+            )
+
         if not is_slot_available(doctor.id, date, time):
             raise serializers.ValidationError({"time": "Bu vaqt allaqachon band"})
         return attrs

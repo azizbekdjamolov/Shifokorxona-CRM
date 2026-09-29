@@ -43,8 +43,8 @@ class BaseFlowTest(TestCase):
         for weekday in DoctorSchedule.Weekday:
             DoctorSchedule.objects.create(
                 doctor=self.doctor, weekday=weekday,
-                start_time="09:00", end_time="17:00",
-                is_working=weekday < 5,
+                start_time="07:00", end_time="21:00",
+                is_working=True,
             )
         self.patient_client = self._auth(self.patient)
         self.doctor_client = self._auth(self.doctor_user)
@@ -257,6 +257,21 @@ class BookingFlowTest(BaseFlowTest):
         from apps.bookings.models import Booking
 
         self.patient.refresh_from_db()
+
+    def test_booking_outside_schedule_rejected(self):
+        res = self.patient_client.post(
+            "/api/bookings/my/",
+            {"doctor": self.doctor.id, "date": timezone.localdate(), "time": "22:00"},
+            format="json",
+        )
+        self.assertEqual(res.status_code, 400)
+
+        res = self.patient_client.post(
+            "/api/bookings/my/",
+            {"doctor": self.doctor.id, "date": timezone.localdate(), "time": "06:00"},
+            format="json",
+        )
+        self.assertEqual(res.status_code, 400)
 
     def test_patient_cannot_change_others(self):
         res = self.patient_client.post(
